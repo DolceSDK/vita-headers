@@ -169,9 +169,9 @@ extern SceInt32 sceAvcdecUnregisterCallbackWithCbidInternal(SceAvcdecCtrl *pCtrl
 extern SceInt32 sceAvcdecQueryDecoderMemSizeInternal(SceUInt32 codecType, const SceAvcdecQueryDecoderInfo *pDecoderInfo, SceAvcdecDecoderInfo *pMemInfo);
 extern SceInt32 sceAvcdecCreateDecoderInternal(SceUInt32 codecType, SceAvcdecCtrl *pCtrl, const SceAvcdecQueryDecoderInfo *pDecoderInfo);
 
-extern SceInt32 sceAvcdecDecodeAuInternal(SceAvcdecCtrl *pCtrl, const SceAvcdecAu *pAu, int *workPictureInterval);
-extern SceInt32 sceAvcdecDecodeGetPictureInternal(SceAvcdecCtrl *pCtrl, SceAvcdecArrayPicture *pArrayPicture, int* workPictureInterval);
-extern SceInt32 sceAvcdecDecodeGetPictureWithWorkPictureInternal(SceAvcdecCtrl *pCtrl, SceAvcdecArrayPicture *pArrayPicture, SceAvcdecArrayPicture *pArrayWorkPicture, int* workPictureInterval);
+extern SceInt32 sceAvcdecDecodeAuInternal(SceAvcdecCtrl *pCtrl, const SceAvcdecAu *pAu, int *pTimeout);
+extern SceInt32 sceAvcdecDecodeGetPictureInternal(SceAvcdecCtrl *pCtrl, SceAvcdecArrayPicture *pArrayPicture, int* pTimeout);
+extern SceInt32 sceAvcdecDecodeGetPictureWithWorkPictureInternal(SceAvcdecCtrl *pCtrl, SceAvcdecArrayPicture *pArrayPicture, SceAvcdecArrayPicture *pArrayWorkPicture, int* pTimeout);
 
 /* Nongame and SceVideodecAsyncUser */
 
@@ -186,8 +186,8 @@ extern SceInt32 sceAvcdecUnregisterCallbackWithCbidNongameapp(SceAvcdecCtrl *pCt
 extern SceInt32 sceAvcdecCreateDecoderNongameapp(SceUInt32 codecType, SceAvcdecCtrl *pCtrl, const SceAvcdecQueryDecoderInfo *pDecoderInfo);
 extern SceInt32 sceAvcdecQueryDecoderMemSizeNongameapp(SceUInt32 codecType, const SceAvcdecQueryDecoderInfo *pDecoderInfo, SceAvcdecDecoderInfo *pMemInfo);
 
-extern SceInt32 sceAvcdecDecodeAuNongameapp(SceAvcdecCtrl *pCtrl, const SceAvcdecAu *pAu, int *workPictureInterval);
-extern SceInt32 sceAvcdecDecodeGetPictureNongameapp(SceAvcdecCtrl *pCtrl, SceAvcdecArrayPicture *pArrayPicture, int* workPictureInterval);
+extern SceInt32 sceAvcdecDecodeAuNongameapp(SceAvcdecCtrl *pCtrl, const SceAvcdecAu *pAu, int *pTimeout);
+extern SceInt32 sceAvcdecDecodeGetPictureNongameapp(SceAvcdecCtrl *pCtrl, SceAvcdecArrayPicture *pArrayPicture, int* pTimeout);
 
 
 #define SCE_AVCDEC_INTERLACED_STREAM_MODE_ENABLE			(0x00000001u)
