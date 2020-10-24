@@ -1728,23 +1728,33 @@ modules:
           sceMotionGetAngleThreshold: 0x499B6C87
           sceMotionGetBasicOrientation: 0x4F28BFE0
           sceMotionGetDeadband: 0x112E0EAE
+          sceMotionGetDeadbandExt: 0xC0586367
           sceMotionGetDeviceLocation: 0x047F060A
           sceMotionGetGyroBiasCorrection: 0xE8A28DA5
           sceMotionGetMagnetometerState: 0x3D4813AE
           sceMotionGetSensorState: 0x47D679EA
           sceMotionGetState: 0xBDB32767
+          sceMotionGetStateExt: 0x340BFBE6
           sceMotionGetStateInternal: 0xAD0B62B7
           sceMotionGetTiltCorrection: 0xC1652201
+          sceMotionGetTiltCorrectionExt: 0xCBD9CA97
+          sceMotionInitLibraryExt: 0x3C970E36
           sceMotionMagnetometerOff: 0xC1A7395A
           sceMotionMagnetometerOn: 0x122A79F8
           sceMotionReset: 0x0FD2CDA2
+          sceMotionResetExt: 0xB7F7535F
           sceMotionRotateYaw: 0x20F00078
           sceMotionSetAngleThreshold: 0xDACB2A41
           sceMotionSetDeadband: 0x917EA390
+          sceMotionSetDeadbandExt: 0xEB345158
           sceMotionSetGyroBiasCorrection: 0xA4A7E6E2
           sceMotionSetTiltCorrection: 0xAF09FCDB
+          sceMotionSetTiltCorrectionExt: 0x58C0187B
           sceMotionStartSampling: 0x28034AC9
+          sceMotionStartSamplingExt: 0x833FD8DC
           sceMotionStopSampling: 0xAF32CB1D
+          sceMotionStopSamplingExt: 0x09338B80
+          sceMotionTermLibraryExt: 0x452F92F7
       SceRtcUser:
         kernel: false
         nid: 0x6704D3C6

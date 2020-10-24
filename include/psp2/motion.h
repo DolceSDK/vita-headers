@@ -234,6 +234,88 @@ SceBool	sceMotionGetGyroBiasCorrection(void);
 
 int sceMotionSetGyroBiasCorrection(SceBool setValue);
 
+/* Extended functions */
+
+/*
+ * Initialize libMotion for extended use
+ * @retval SCE_OK success
+ *			<SCE_OK Error
+ */
+
+int sceMotionInitLibraryExt(void);
+
+/*
+ * Terminate libMotion for extended use
+ * @retval SCE_OK success
+ *			<SCE_OK Error
+ */
+
+int sceMotionTermLibraryExt(void);
+
+/*
+ * Calculate and update the new motion states
+ * @retval SCE_OK success
+ *			<SCE_OK Error
+ */
+
+int sceMotionGetStateExt(int port, SceMotionState *motionState);
+
+/*
+ * Retrieve the status of tilt correction filter settings
+ * @retval SCE_OK success
+ *			<SCE_OK Error
+ */
+
+int sceMotionGetTiltCorrectionExt(int port, SceBool *getValue);
+
+/*
+ * Set the tilt correction filter settings
+ * @retval SCE_OK success
+ *			<SCE_OK Error
+ */
+
+int sceMotionSetTiltCorrectionExt(int port, SceBool setValue);
+
+/*
+ * Retrieve the status of deadband filter mode
+ * @retval SCE_OK success
+ *			<SCE_OK Error
+ */
+
+int sceMotionGetDeadbandExt(int port, SceBool *getValue);
+
+/*
+ * Set the deadbanding filter mode
+ * @retval SCE_OK success
+ *			<SCE_OK Error
+ */
+
+int sceMotionSetDeadbandExt(int port, SceBool setValue);
+
+/*
+ * Reset the device posture and filter settings.
+ * @retval  SCE_OK success
+ *			<SCE_OK Error
+ */
+
+int sceMotionResetExt(void);
+
+/*
+ * Begin sampling data.
+ * @retval SCE_OK success
+ *			<SCE_OK Error
+ */
+
+int sceMotionStartSamplingExt(int port);
+
+/*
+ * Stop sampling data.
+ * @retval SCE_OK success
+ *			<SCE_OK Error
+ */
+
+int sceMotionStopSamplingExt(int port);
+
 /* Internal functions */
 
 /*
