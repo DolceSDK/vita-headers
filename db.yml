@@ -1733,6 +1733,7 @@ modules:
           sceMotionGetMagnetometerState: 0x3D4813AE
           sceMotionGetSensorState: 0x47D679EA
           sceMotionGetState: 0xBDB32767
+          sceMotionGetStateInternal: 0xAD0B62B7
           sceMotionGetTiltCorrection: 0xC1652201
           sceMotionMagnetometerOff: 0xC1A7395A
           sceMotionMagnetometerOn: 0x122A79F8

@@ -234,6 +234,17 @@ SceBool	sceMotionGetGyroBiasCorrection(void);
 
 int sceMotionSetGyroBiasCorrection(SceBool setValue);
 
+/* Internal functions */
+
+/*
+ * Calculate and update the new motion states
+ * @param *motionState : State Pointer to save data into
+ * @retval SCE_OK success
+ *			<SCE_OK Error
+ */
+
+int sceMotionGetStateInternal(SceMotionState *motionState);
+
 /*
  * Error number definition
  */
