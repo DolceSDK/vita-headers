@@ -7694,6 +7694,7 @@ modules:
         functions:
           scePafCesUtf16CharToUtf8WithAlloc: 0xE690F751
           scePafCesUtf8CharToUtf16WithAlloc: 0xA6ABC0B2
+          scePafMiscInitializeInputMethodExt: 0xAC108E50
           sce_paf_misc_does_file_exist: 0x95F14046
       ScePafResource:
         kernel: false
