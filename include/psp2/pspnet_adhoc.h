@@ -7,9 +7,7 @@
 #ifndef _PSP2_PSPNET_ADHOC_H_
 #define _PSP2_PSPNET_ADHOC_H_
 
-#include <psp2/types.h>
 #include <psp2/pspnet_adhocctl.h>
-#include <psp2/net/net.h>
 
 #ifdef __cplusplus
 extern "C" {
