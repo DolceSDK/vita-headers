@@ -7097,22 +7097,70 @@ modules:
           _ZN4Manx10FontStream5closeEPv: 0xA8590908
           _ZN4Manx10FontStream6createEv: 0x0A221CBB
           _ZN4Manx10FontStream7destroyEPv: 0xB5C06BFA
+          _ZN4Manx11WebSecurity9userAgentEv: 0x02DAD3C0
           _ZN4Manx11getFontDataEPKcPPvPj: 0x273F09FF
           _ZN4Manx11getFontNameEPKwjPKcRNS_17FontSynthesisHintE: 0xE2589087
           _ZN4Manx11getFontPathEPKwj: 0xD2A9D0E0
+          _ZN4Manx14NetworkProfile13cookieEnabledEv: 0xC72A8D10
+          _ZN4Manx14NetworkProfile3getENS_21NetPropsSslVerifyHostE: 0x9D907EF8
+          _ZN4Manx14NetworkProfile3getENS_22NetPropsCookieFilenameEPcj: 0x0BD192F1
+          _ZN4Manx14NetworkProfile9getStringENS_21NetPropsSslCipherListE: 0x47FE747E
           _ZN4Manx18getDefaultFontPathEv: 0xCA0C5B79
           _ZN4Manx6Locale11getLanguageEv: 0x14DF3842
           accept: 0x016AA482
           access: 0x440AB974
           bind: 0x504EFE25
+          cairo_destroy: 0xA0F9F763
+          cairo_fill: 0x87C61521
+          cairo_get_matrix: 0x7F9FF843
+          cairo_get_source: 0x8FDABE19
+          cairo_get_target: 0x73DC5982
+          cairo_image_surface_create_for_data: 0x404FC5F5
+          cairo_image_surface_get_data: 0x3F2381F0
+          cairo_image_surface_get_height: 0xCE479334
+          cairo_image_surface_get_stride: 0x3DC8289B
+          cairo_image_surface_get_width: 0xB21B39D1
+          cairo_pattern_set_extend: 0x5564B376
+          cairo_pattern_set_filter: 0xAD07FB60
+          cairo_rectangle: 0x1994F354
+          cairo_set_operator: 0x91DC4874
+          cairo_set_source_rgb: 0x71D44121
+          cairo_set_source_surface: 0x7340A2FF
+          cairo_status: 0x7EB9A7A1
+          cairo_stroke: 0x519D2266
+          cairo_surface_destroy: 0x0D477D05
+          cairo_surface_finish: 0xB1BE9AAF
+          cairo_surface_get_type: 0x3962D944
+          clearscrachpad: 0x86D78DD5
           close: 0x49D31125
           closedir: 0x614BC98D
           closesocket: 0x7842B5FD
+          curl_easy_cleanup: 0xE58ABD18
+          curl_easy_getinfo: 0x70C6F106
+          curl_easy_init: 0xAFCFB0DA
+          curl_easy_pause: 0xC0CBDEDF
+          curl_easy_perform: 0xDA3F145E
+          curl_easy_recv: 0xE63B3A56
+          curl_easy_reset: 0xDA1C173A
+          curl_easy_send: 0x41837495
+          curl_easy_setopt: 0x30E7FB1B
           curl_easy_strerror: 0xE086D703
+          curl_global_cleanup: 0x84E081DF
+          curl_global_init: 0x92A0768D
+          curl_global_init_mem: 0x79151BD4
+          curl_multi_info_read: 0x707791DB
+          curl_multi_perform: 0xA6EC44B0
+          curl_multi_remove_handle: 0x64FF130E
+          curl_share_cleanup: 0x26AA8E8B
+          curl_share_init: 0x79197AA2
+          curl_share_setopt: 0x8A84050C
+          curl_slist_free_all: 0x819C3573
           deflate: 0xDE11DCDD
           deflateEnd: 0x9A314270
           deflateInit2_: 0x1E106A0E
           deflateReset: 0x86E00B12
+          encodeImage: 0x431BFA32
+          freescrachpadpath: 0x11B9D0D0
           ftruncate: 0x0C46FC96
           get_netscape_format: 0x53C78F87
           getenv: 0x4F5A3726
@@ -7137,9 +7185,12 @@ modules:
           listen: 0x3104E01A
           localtime_r: 0x78050A6E
           lseek: 0x684DBF22
+          makescrachpadpath: 0xD95F9BAC
           mkdir: 0xC8DE4EA7
           open: 0x5BCFDB76
           opendir: 0x5524F04F
+          pa_pop_marker: 0xF64CCD31
+          pa_push_marker: 0xEA97EFEB
           pipe: 0x88AFBD1A
           pixman_image_composite32: 0xABE238BC
           png_access_version_number: 0x1A984964
@@ -7162,13 +7213,13 @@ modules:
           png_do_write_transformations: 0x3DB1AECB
           png_error: 0x83B22ED9
           png_get_IHDR: 0x263D99B1
-          png_get_channels: 0xB58C339C
+          png_get_channels: 0x85AFD733
           png_get_gAMA: 0xC54DD2A5
           png_get_gAMA_fixed: 0xFF42DC14
           png_get_iCCP: 0x292E7C60
           png_get_image_height: 0x48F4269E
           png_get_image_width: 0xDA52DE55
-          png_get_interlace_type: 0x85AFD733
+          png_get_interlace_type: 0xB58C339C
           png_get_io_state: 0xE67CE5C3
           png_get_progressive_ptr: 0x30395774
           png_get_rgb_to_gray_status: 0xDF4288FE
@@ -7274,13 +7325,30 @@ modules:
           rmdir: 0x7DC5F0A1
           scePsp2CompatPngDecodeFile: 0x879E6779
           scePsp2CompatPngDecodeMemory: 0xF7687326
-          scePsp2CompatPngEncodeMemory: 0x431BFA32
+          scrachpadmatch: 0xE86136A0
           select: 0x7100A598
           send: 0xDF63C36D
           sendto: 0x2B56CECD
+          setenv: 0x606C68D1
           setsockopt: 0x6E5E8340
           shutdown: 0xD2108D91
           socket: 0xFD31AE18
+          sqlite3_close: 0x90E0DDD4
+          sqlite3_column_blob: 0x56262DAD
+          sqlite3_column_bytes: 0xF75D6F7B
+          sqlite3_column_bytes16: 0xA5704B9A
+          sqlite3_column_int: 0xBFA6E27F
+          sqlite3_column_int64: 0xAFAB6C74
+          sqlite3_column_text16: 0x51DADB80
+          sqlite3_errcode: 0xF01119E4
+          sqlite3_errmsg: 0xA2F1070D
+          sqlite3_extended_result_codes: 0x0FB9EDF2
+          sqlite3_finalize: 0x56F482A2
+          sqlite3_open16: 0x508C420F
+          sqlite3_prepare16_v2: 0x3BAD57CA
+          sqlite3_set_authorizer: 0x1AE1928A
+          sqlite3_step: 0x9291C971
+          sqlite3_total_changes: 0x0833BFAF
           unlink: 0x3358CDD4
           write: 0xFB129366
   SceNpManager:
