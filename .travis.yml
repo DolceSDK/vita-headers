@@ -1,16 +1,19 @@
 language: c
 os: linux
 dist: bionic
+env:
+  - DOLCESDK="$HOME/dolcesdk"
+    PATH="$DOLCESDK/bin:$PATH"
 script:
-    - set -e
-    - cd $TRAVIS_BUILD_DIR
-    - python $TRAVIS_BUILD_DIR/.travis.d/definition_check.py
-    - bash $TRAVIS_BUILD_DIR/.travis.d/definition_ordering.sh
-    - bash $TRAVIS_BUILD_DIR/.travis.d/download_sdk.sh
-    - export DOLCESDK=$PWD/dolcesdk
-    - export PATH=$DOLCESDK/bin:$PATH
-    - export INCLUDE_DIR=$TRAVIS_BUILD_DIR/include
-    # Make sure headers are valid
+    # Basic NIDs ordering and existence
+    - .travis.d/definition_check.py
+    - .travis.d/definition_ordering.sh
+    # Install SDK
+    - git clone --depth=1 https://github.com/DolceSDK/ddpm.git
+    - python3 ddpm/dolcesdk-update.py
+    - rm -rf ddpm
+    # Check headers with gcc/g++ -c
+    - export INCLUDE_DIR=./include
     - find $INCLUDE_DIR -type f -name "*.h" | xargs -I FN -n 1 -P 4 arm-dolce-eabi-gcc -I$INCLUDE_DIR -c FN -o /dev/null
     - find $INCLUDE_DIR -type f -name "*.h" | xargs -I FN -n 1 -P 4 arm-dolce-eabi-g++ -I$INCLUDE_DIR -c FN -o /dev/null
     # Remove installed headers and stubs
@@ -27,9 +30,7 @@ script:
     - dolcesdk-update-packages
     # Build samples
     - cd $TRAVIS_BUILD_DIR
-    - git clone https://github.com/DolceSDK/samples
+    - git clone --depth=1 https://github.com/DolceSDK/samples.git
     - cd samples
-    - mkdir build
-    - cd build
-    - cmake ..
-    - make
+    - cmake .
+    - make --jobs=$(nproc)

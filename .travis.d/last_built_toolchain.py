@@ -15,6 +15,8 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
+# This file is for backward compatibility with older ddpm
+
 import json
 import urllib.request as request
 
