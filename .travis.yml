@@ -1,6 +1,15 @@
 language: c
 os: linux
 dist: bionic
+addons:
+  apt:
+    sources:
+      - sourceline: 'deb https://apt.kitware.com/ubuntu/ bionic main'
+        key_url: 'https://apt.kitware.com/keys/kitware-archive-latest.asc'
+    packages:
+      - cmake
+before_script:
+  - sudo rm -rf /usr/local/cmake-* # workaround to remove default cmake that has priority in PATH
 env:
   - DOLCESDK="$HOME/dolcesdk"
     PATH="$DOLCESDK/bin:$PATH"
@@ -24,8 +33,7 @@ script:
     # Build headers and stubs and install
     - cd $TRAVIS_BUILD_DIR
     - cmake .
-    - make --quiet --jobs=$(nproc) prepare-stubs install
-    - find stubs -name Makefile -execdir make --quiet --jobs=$(nproc) install ';'
+    - make install install-stubs
     # Install packages
     - dolcesdk-update-packages
     # Build samples
