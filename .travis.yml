@@ -14,32 +14,4 @@ env:
   - DOLCESDK="$HOME/dolcesdk"
     PATH="$DOLCESDK/bin:$PATH"
 script:
-    # Basic NIDs ordering and existence
-    - .travis.d/definition_check.py
-    - .travis.d/definition_ordering.sh db.yml
-    - .travis.d/definition_ordering.sh db_365.yml
-    # Install SDK
-    - git clone --depth=1 https://github.com/DolceSDK/ddpm.git
-    - python3 ddpm/dolcesdk-update.py
-    - rm -rf ddpm
-    # Check headers with gcc/g++ -c
-    - export INCLUDE_DIR=./include
-    - find $INCLUDE_DIR -type f -name "*.h" | xargs -I FN -n 1 -P 4 arm-dolce-eabi-gcc -I$INCLUDE_DIR -c FN -o /dev/null
-    - find $INCLUDE_DIR -type f -name "*.h" | xargs -I FN -n 1 -P 4 arm-dolce-eabi-g++ -I$INCLUDE_DIR -c FN -o /dev/null
-    # Remove installed headers and stubs
-    - cd $DOLCESDK/arm-dolce-eabi/include
-    - rm -rf psp2{,kern,common} dolcesdk dolcesdk{,kern}.h
-    - cd $DOLCESDK/arm-dolce-eabi/lib
-    - rm -rf *_stub{,_weak}.a
-    # Build headers and stubs and install
-    - cd $TRAVIS_BUILD_DIR
-    - cmake .
-    - make install install-stubs
-    # Install packages
-    - dolcesdk-update-packages
-    # Build samples
-    - cd $TRAVIS_BUILD_DIR
-    - git clone --depth=1 https://github.com/DolceSDK/samples.git
-    - cd samples
-    - cmake .
-    - make --jobs=$(nproc)
+  - .travis.d/script.sh
