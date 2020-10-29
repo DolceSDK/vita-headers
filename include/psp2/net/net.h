@@ -23,7 +23,10 @@ int sceNetShowNetstat(void);
 #endif
 
 /* This is for backward compatibility with Vitasdk */
+#if !defined(_DOLCESDK_PSP2_NET_H_)
+#pragma message "<psp2/net/net.h> has been split into multiple files. Please include <psp2/net.h>."
 #include <psp2/net.h>
+#endif
 
 #endif	/* _DOLCESDK_PSP2_NET_NET_H_ */
 
