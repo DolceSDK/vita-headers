@@ -1,5 +1,7 @@
 language: c
-os: linux
+os:
+  - linux
+  - osx
 dist: bionic
 addons:
   apt:
