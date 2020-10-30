@@ -23,7 +23,7 @@ find "$INCLUDE_DIR" -type f -name '*.h' | xargs -I FN -n 1 -P $(nproc) arm-dolce
 
 # Remove installed headers and stubs
 cd "$DOLCESDK/arm-dolce-eabi/include"
-rm -rf psp2{,kern,common} dolcesdk dolcesdk{,kern}.h
+rm -rf psp2{,kern,common} dolcesdk KHR GLES2 EGL
 cd "$DOLCESDK/arm-dolce-eabi/lib"
 rm -rf *_stub{,_weak}.a
 
