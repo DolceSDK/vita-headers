@@ -8,8 +8,8 @@ fi
 
 # Basic NIDs ordering and existence
 .travis.d/definition_check.py
-.travis.d/definition_ordering.sh db.yml
-.travis.d/definition_ordering.sh db_365.yml
+.travis.d/definition_ordering.py db.yml
+.travis.d/definition_ordering.py db_365.yml
 
 # Install SDK
 git clone --depth=1 https://github.com/DolceSDK/ddpm.git
