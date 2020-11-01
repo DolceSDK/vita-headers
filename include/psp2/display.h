@@ -31,11 +31,13 @@ typedef enum SceDisplayPixelFormat {
 	SCE_DISPLAY_PIXELFORMAT_A8B8G8R8 = 0x00000000U
 } SceDisplayPixelFormat;
 
+#define SCE_DISPLAY_UPDATETIMING_NEXTHSYNC	0
+#define SCE_DISPLAY_UPDATETIMING_NEXTVSYNC	1
+
+// This enum is for backward compatibility with Vitasdk
 typedef enum SceDisplaySetBufSync {
-	/** Buffer change effective immediately */
-	SCE_DISPLAY_SETBUF_IMMEDIATE = 0,
-	/** Buffer change effective next frame */
-	SCE_DISPLAY_SETBUF_NEXTFRAME = 1
+	SCE_DISPLAY_SETBUF_IMMEDIATE = SCE_DISPLAY_UPDATETIMING_NEXTHSYNC,
+	SCE_DISPLAY_SETBUF_NEXTFRAME = SCE_DISPLAY_UPDATETIMING_NEXTVSYNC,
 } SceDisplaySetBufSync;
 
 /**
