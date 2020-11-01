@@ -30,7 +30,7 @@ rm -rf *_stub{,_weak}.a
 # Build headers and stubs and install
 cd "$TRAVIS_BUILD_DIR"
 cmake .
-make install install-stubs
+make install install-stubs install-blobs
 
 # Install packages
 dolcesdk-update-packages $AUTH
