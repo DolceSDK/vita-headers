@@ -1,7 +1,8 @@
-﻿#ifndef _DOLCESDK_PSP2_SHACCCG_TYPES_H_
+#ifndef _DOLCESDK_PSP2_SHACCCG_TYPES_H_
 #define _DOLCESDK_PSP2_SHACCCG_TYPES_H_
 
-#include "psp2common/types.h"
+#include <stddef.h>
+#include <stdint.h>
 
 #ifdef	__cplusplus
 extern "C" {
@@ -31,14 +32,14 @@ typedef struct SceShaccCgSourceLocation SceShaccCgSourceLocation;
 	calling SceShaccCgCallbackReleaseFile when the returned SceShaccCgSourceFile
 	is no longer required.
 
-	@param[in] fileName	
+	@param[in] fileName
 		The absolute path of the file to be opened.
 
 	@param[in] includedFrom
 		The include location. Set to 0 for a primary file.
 
 	@param[in] compileOptions
-		The original options pointer used to invoke this compile. 
+		The original options pointer used to invoke this compile.
 
 	@param[in] userData
 		Opaque pointer to user data.
@@ -54,11 +55,11 @@ typedef struct SceShaccCgSourceLocation SceShaccCgSourceLocation;
 	@ingroup shacccg
 */
 typedef SceShaccCgSourceFile* (*SceShaccCgCallbackOpenFile)(
-	const SceChar8 *fileName,
+	const char *fileName,
 	const SceShaccCgSourceLocation *includedFrom,
 	const SceShaccCgCompileOptions *compileOptions,
-	ScePVoid userData,
-	const SceChar8 **errorString);
+	void *userData,
+	const char **errorString);
 
 /**	@brief	A callback used when the compiler needs to release file data.
 
@@ -81,10 +82,10 @@ typedef SceShaccCgSourceFile* (*SceShaccCgCallbackOpenFile)(
 typedef void (*SceShaccCgCallbackReleaseFile)(
 	const SceShaccCgSourceFile *file,
 	const SceShaccCgCompileOptions *compileOptions,
-	ScePVoid userData);
+	void *userData);
 
 /**	@brief	A callback used to search for a named file.
- 	 
+
 	This function will search in all provided paths for the named file. If the
 	file could not be located, 0 is returned and errorString will have been
 	updated to a representative message, explaining why the file could not be
@@ -92,7 +93,7 @@ typedef void (*SceShaccCgCallbackReleaseFile)(
 	On success, a non-zero string is returned. The caller takes ownership and
 	will release the allocation via the SceShaccCgCallbackReleaseFileName
 	callback.
- 
+
 	@param[in] fileName
 		The name of the file to be located.
 
@@ -122,26 +123,26 @@ typedef void (*SceShaccCgCallbackReleaseFile)(
  	@ingroup shacccg
 */
 typedef const char* (*SceShaccCgCallbackLocateFile)(
-	const SceChar8 *fileName,
+	const char *fileName,
 	const SceShaccCgSourceLocation *includedFrom,
-	SceUInt32 searchPathCount,
-	const SceChar8 *const*searchPaths,
+	uint32_t searchPathCount,
+	const char *const*searchPaths,
 	const SceShaccCgCompileOptions *compileOptions,
-	ScePVoid userData,
-	const SceChar8 **errorString);
- 	 
+	void *userData,
+	const char **errorString);
+
 /**	@brief	A callback used to retrieve the absolute path name for a given file.
 
 	Files are uniquely identified by absolute paths. If two include files lead
 	to the same absolute path, the previously found file is used and no call
 	to SceShaccCgCallbackOpenFile will be made. This function allows for a
 	translation from a relative path scheme to an absolute path scheme.
- 	 
+
 	If there is no valid absolute path for the given file, 0 should be returned.
 	If a non-zero string is returned, the caller takes ownership and will release
 	the allocation via the SceShaccCgCallbackReleaseFileName callback.
 	This string will be the name passed to SceShaccCgCallbackOpenFile.
- 	
+
 	@param[in] fileName
 		The (possibly relative) file path for an include file, as provided
 		by SceShaccCgCallbackLocateFile.
@@ -161,10 +162,10 @@ typedef const char* (*SceShaccCgCallbackLocateFile)(
 	@ingroup shacccg
 */
 typedef const char* (*SceShaccCgCallbackAbsolutePath)(
-	const SceChar8 *fileName,
+	const char *fileName,
 	const SceShaccCgSourceLocation *includedFrom,
 	const SceShaccCgCompileOptions *compileOptions,
-	ScePVoid userData);
+	void *userData);
 
 /**	@brief	A callback for the compiler to release a file name.
 
@@ -184,12 +185,12 @@ typedef const char* (*SceShaccCgCallbackAbsolutePath)(
 	@ingroup shacccg
 */
 typedef void (*SceShaccCgCallbackReleaseFileName)(
-	const SceChar8 *fileName,
+	const char *fileName,
 	const SceShaccCgCompileOptions *compileOptions,
-	ScePVoid userData);
+	void *userData);
 
 /**	@brief	Provides date information for the named file.
- 	 
+
 	If the date attributes could not be read, 0 is returned and the results
 	will be considered invalid.
 	On success, timeLastStatusChange and timeLastModified will have been
@@ -219,13 +220,13 @@ typedef void (*SceShaccCgCallbackReleaseFileName)(
 
 	@ingroup shacccg
 */
-typedef SceInt32 (*SceShaccCgCallbackFileDate)(
+typedef int32_t (*SceShaccCgCallbackFileDate)(
 	const SceShaccCgSourceFile *file,
 	const SceShaccCgSourceLocation *includedFrom,
 	const SceShaccCgCompileOptions *compileOptions,
-	ScePVoid userData,
-	SceInt64 *timeLastStatusChange,					///< using time_t
-	SceInt64 *timeLastModified);					///< using time_t
+	void *userData,
+	int64_t *timeLastStatusChange,					///< using time_t
+	int64_t *timeLastModified);						///< using time_t
 
 /**	@brief	A callback used when the compiler needs to allocate memory.
 
@@ -236,20 +237,20 @@ typedef SceInt32 (*SceShaccCgCallbackFileDate)(
 
 	@ingroup shacccg
 */
-typedef ScePVoid (*SceShaccCgMemAllocator)(
-	SceSize memSize);
+typedef void *(*SceShaccCgAllocator)(
+	size_t memSize);
 
 /**	@brief	A callback used when the compiler needs to free memory.
 
 	This function is used to free memory.
 
 	@param[in] memPtr
-		Pointer to a memory block previously allocated with SceShaccCgMemAllocator
+		Pointer to a memory block previously allocated with SceShaccCgAllocator
 
 	@ingroup shacccg
 */
-typedef SceVoid (*SceShaccCgMemFree)(
-	ScePVoid ptr);
+typedef void (*SceShaccCgDeallocator)(
+	void *memPtr);
 
 ///////////////////////////////////////////////////////////////////////////////
 // Constants
@@ -305,9 +306,9 @@ typedef enum SceShaccCgLocale {
 	@ingroup shacccg
 */
 typedef struct SceShaccCgSourceFile {
-	const SceChar8 *fileName;						///< The relative or absolute name of the file.
-	const SceChar8 *text;							///< The contents of the source file.
-	SceUInt32 size;									///< The size of the 'text' array in bytes.
+	const char *fileName;							///< The relative or absolute name of the file.
+	const char *text;								///< The contents of the source file.
+	uint32_t size;									///< The size of the 'text' array in bytes.
 } SceShaccCgSourceFile;
 
 
@@ -317,8 +318,8 @@ typedef struct SceShaccCgSourceFile {
 */
 typedef struct SceShaccCgSourceLocation {
 	const SceShaccCgSourceFile *file;				///< The file containing the location.
-	SceUInt32 lineNumber;							///< The line number of the location.
-	SceUInt32 columnNumber;							///< The column number of the location.
+	uint32_t lineNumber;							///< The line number of the location.
+	uint32_t columnNumber;							///< The column number of the location.
 } SceShaccCgSourceLocation;
 
 /** @brief	Describes the input data for a compilation job.
@@ -326,36 +327,36 @@ typedef struct SceShaccCgSourceLocation {
 	@ingroup shacccg
 */
 typedef struct SceShaccCgCompileOptions {
-	const SceChar8 *mainSourceFile;					///< The main Cg source file to compile. 0
-	SceShaccCgTargetProfile targetProfile;			///< The target profile. 4
-	const SceChar8 *entryFunctionName;				///< The name of the entry function. Usually "main". 8
-	SceUInt32 searchPathCount;						///< The number of search paths for include files. c
-	const SceChar8* const *searchPaths;				///< The search paths for include files. 10
-	SceUInt32 macroDefinitionCount;					///< The number of macro definitions provided. 14
-	const SceChar8* const *macroDefinitions;		///< The macro definitions in the form: MACRONAME or MACRONAME=VALUE 18
-	SceUInt32 includeFileCount;						///< The number of files to force include. 1c
-	const SceChar8* const *includeFiles;			///< The files to include before the main source file. 20
-	SceUInt32 suppressedWarningsCount;				///< The number of warnings to suppressed. 24
-	const SceUInt32 *suppressedWarnings;			///< The id numbers of the warnings to be suppressed. 28
+	const char *mainSourceFile;						///< The main Cg source file to compile.
+	SceShaccCgTargetProfile targetProfile;			///< The target profile.
+	const char *entryFunctionName;					///< The name of the entry function. Usually "main".
+	uint32_t searchPathCount;						///< The number of search paths for include files.
+	const char* const *searchPaths;					///< The search paths for include files.
+	uint32_t macroDefinitionCount;					///< The number of macro definitions provided.
+	const char* const *macroDefinitions;			///< The macro definitions in the form: MACRONAME or MACRONAME=VALUE
+	uint32_t includeFileCount;						///< The number of files to force include.
+	const char* const *includeFiles;				///< The files to include before the main source file.
+	uint32_t suppressedWarningsCount;				///< The number of warnings to suppressed.
+	const uint32_t *suppressedWarnings;				///< The id numbers of the warnings to be suppressed.
 
-	SceShaccCgLocale locale;						///< The language to use in diagnostics. 2c
+	SceShaccCgLocale locale;						///< The language to use in diagnostics.
 
-	SceInt32 useFx;									///< Equivalent to -fx if non-zero, -nofx otherwise. 30
-	SceInt32 noStdlib;								///< Equivalent to -nostdlib if non-zero. 34
+	int32_t useFx;									///< Equivalent to -fx if non-zero, -nofx otherwise.
+	int32_t noStdlib;								///< Equivalent to -nostdlib if non-zero.
 
-	SceInt32 optimizationLevel;						///< Equivalent to -O?. Valid range is 0-4. 38 
-	SceInt32 useFastmath;							///< Equivalent to -fastmath if non-zero. 3c
-	SceInt32 useFastprecision;						///< Equivalent to -fastprecision if non-zero. 40
-	SceInt32 useFastint;							///< Equivalent to -fastint if non-zero. 44
-	SceInt32 positionInvariant;						///< Equivalent to -invpos if non-zero. 48
+	int32_t optimizationLevel;						///< Equivalent to -O?. Valid range is 0-4.
+	int32_t useFastmath;							///< Equivalent to -fastmath if non-zero.
+	int32_t useFastprecision;						///< Equivalent to -fastprecision if non-zero.
+	int32_t useFastint;								///< Equivalent to -fastint if non-zero.
+	int32_t positionInvariant;						///< Equivalent to -invpos if non-zero.
 
-	SceInt32 warningsAsErrors;						///< Equivalent to -Werror if non-zero. 4c
-	SceInt32 performanceWarnings;					///< Equivalent to -Wperf if non-zero. 50
-	SceInt32 warningLevel;							///< Equivalent to -W?. Valid range is 0-4. 54 
-	SceInt32 pedantic;								///< Equivalent to -pedantic if non-zero. 58
-	SceInt32 pedanticError;							///< Equivalent to -pedantic-error if non-zero. 5c
-	SceInt32 xmlCache;								///< Equivalent to -xmlcache if non-zero. 60
-	SceInt32 stripSymbols;							///< When set to non zero compilation will produce a stripped gxp file 64
+	int32_t warningsAsErrors;						///< Equivalent to -Werror if non-zero.
+	int32_t performanceWarnings;					///< Equivalent to -Wperf if non-zero.
+	int32_t warningLevel;							///< Equivalent to -W?. Valid range is 0-4.
+	int32_t pedantic;								///< Equivalent to -pedantic if non-zero.
+	int32_t pedanticError;							///< Equivalent to -pedantic-error if non-zero.
+	int32_t xmlCache;								///< Equivalent to -xmlcache if non-zero.
+	int32_t stripSymbols;							///< When set to non zero compilation will produce a stripped gxp file
 } SceCgcCompileOptions;
 
 /**	@brief	Lists the user defined callbacks for compiler operations.
@@ -386,9 +387,9 @@ typedef struct SceShaccCgCallbackList {
 */
 typedef struct SceShaccCgDiagnosticMessage {
 	SceShaccCgDiagnosticLevel level;				///< The severity of the diagnostic.
-	SceUInt32 code;									///< A unique code for each kind of diagnostic.
+	uint32_t code;									///< A unique code for each kind of diagnostic.
 	const SceShaccCgSourceLocation *location;		///< The location for which the diagnostic is reported (optional).
-	const SceChar8 *message;							///< The diagnostic message.
+	const char *message;							///< The diagnostic message.
 } SceShaccCgDiagnosticMessage;
 
 
@@ -409,14 +410,14 @@ typedef struct SceShaccCgDiagnosticMessage {
 
 	@ingroup shacccg
 */
-SceVoid sceShaccCgInitializeCompileOptions(
+void sceShaccCgInitializeCompileOptions(
 	SceShaccCgCompileOptions *options);
 
 /**	@brief	Initializes the callback list with the default values.
 
 	There are two kinds of defaults available:
 	- SCE_SHACCCG_SYSTEM_FILES uses the native file system of the operating
-		system in the same manner as the command-line version of shacccg.
+		system in the same manner as the command-line version of psp2cgc.
 		This is the default behavior if no callback structure is provided for
 		a compilation/pre-processing/dependency job.
 	- SCE_SHACCCG_TRIVIAL provides placeholder implementations of all callbacks
@@ -437,7 +438,7 @@ SceVoid sceShaccCgInitializeCompileOptions(
 
 	@ingroup shacccg
 */
-SceVoid sceShaccCgInitializeCallbackList(
+void sceShaccCgInitializeCallbackList(
 	SceShaccCgCallbackList *callbacks,
 	SceShaccCgCallbackDefaults defaults);
 

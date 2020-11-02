@@ -1,7 +1,7 @@
-﻿#ifndef _DOLCESDK_PSP2_SHACCCG_PARAMQUERY_H_
+#ifndef _DOLCESDK_PSP2_SHACCCG_PARAMQUERY_H_
 #define _DOLCESDK_PSP2_SHACCCG_PARAMQUERY_H_
 
-#include "psp2common/types.h"
+#include <stdint.h>
 
 #ifdef	__cplusplus
 extern "C" {
@@ -57,7 +57,7 @@ typedef enum SceShaccCgParameterBaseType {
 	SCE_SHACCCG_BASETYPE_SAMPLERCUBE	= 0x11,		///< Cube sampler
 	SCE_SHACCCG_BASETYPE_ISAMPLERCUBE	= 0x12,		///< Cube signed integer sampler
 	SCE_SHACCCG_BASETYPE_USAMPLERCUBE	= 0x13,		///< Cube unsigned integer sampler
-	SCE_SHACCCG_BASETYPE_ARRAY			= 0x17,		///< An array 
+	SCE_SHACCCG_BASETYPE_ARRAY			= 0x17,		///< An array
 	SCE_SHACCCG_BASETYPE_STRUCT			= 0x18,		///< A structure
 	SCE_SHACCCG_BASETYPE_UNIFORMBLOCK	= 0x19		///< A uniform block
 } SceShaccCgParameterBaseType;
@@ -134,7 +134,7 @@ SceShaccCgParameter sceShaccCgGetFirstParameter(
 		no more parameters.
 
 	@ingroup shacccg
-*/ 
+*/
 SceShaccCgParameter sceShaccCgGetNextParameter(
 	SceShaccCgParameter param);
 
@@ -155,8 +155,8 @@ SceShaccCgParameter sceShaccCgGetNextParameter(
 	@ingroup shacccg
 */
 SceShaccCgParameter sceShaccCgGetParameterByName(
-	SceShaccCgCompileOutput const* prog, 
-	SceChar8 const *name);
+	SceShaccCgCompileOutput const* prog,
+	char const *name);
 
 /**	@brief	Returns the name of a parameter.
 
@@ -170,7 +170,7 @@ SceShaccCgParameter sceShaccCgGetParameterByName(
 
 	@ingroup shacccg
 */
-const SceChar8 *sceShaccCgGetParameterName(
+const char * sceShaccCgGetParameterName(
 	SceShaccCgParameter param);
 
 /**	@brief	Returns the semantic of a parameter.
@@ -186,7 +186,7 @@ const SceChar8 *sceShaccCgGetParameterName(
 
 	@ingroup shacccg
 */
-const SceChar8 *sceShaccCgGetParameterSemantic(
+const char * sceShaccCgGetParameterSemantic(
 	SceShaccCgParameter param);
 
 /**	@brief	Returns the user declared type of a parameter.
@@ -202,7 +202,7 @@ const SceChar8 *sceShaccCgGetParameterSemantic(
 
 	@ingroup shacccg
 */
-const SceChar8 *sceShaccCgGetParameterUserType(
+const char * sceShaccCgGetParameterUserType(
 	SceShaccCgParameter param);
 
 /**	@brief	Returns the parameter class.
@@ -277,7 +277,7 @@ SceShaccCgParameterBaseType sceShaccCgGetParameterBaseType(
 
 	@ingroup shacccg
 */
-SceInt32 sceShaccCgIsParameterReferenced(
+int32_t sceShaccCgIsParameterReferenced(
 	SceShaccCgParameter param);
 
 /**	@brief	Returns the hw resource index of the parameter.
@@ -292,7 +292,7 @@ SceInt32 sceShaccCgIsParameterReferenced(
 
 	@ingroup shacccg
 */
-SceUInt32 sceShaccCgGetParameterResourceIndex(
+uint32_t sceShaccCgGetParameterResourceIndex(
 	SceShaccCgParameter param);
 
 /**	@brief	Returns the buffer index of the parameter.
@@ -307,7 +307,7 @@ SceUInt32 sceShaccCgGetParameterResourceIndex(
 
 	@ingroup shacccg
 */
-SceUInt32 sceShaccCgGetParameterBufferIndex(
+uint32_t sceShaccCgGetParameterBufferIndex(
 	SceShaccCgParameter param);
 
 /**	@brief	Returns true if the parameter is __regformat.
@@ -322,7 +322,7 @@ SceUInt32 sceShaccCgGetParameterBufferIndex(
 
 	@ingroup shacccg
 */
-SceInt32 sceShaccCgIsParameterRegFormat(
+int32_t sceShaccCgIsParameterRegFormat(
 	SceShaccCgParameter param);
 
 /**	@brief	Returns the first member for a struct parameter.
@@ -369,7 +369,7 @@ SceShaccCgParameter sceShaccCgGetFirstUniformBlockParameter(
 
 	@ingroup shacccg
 */
-SceUInt32 sceShaccCgGetArraySize(
+uint32_t sceShaccCgGetArraySize(
 	SceShaccCgParameter param);
 
 /**	@brief	Returns the parameter for an array element.
@@ -388,7 +388,7 @@ SceUInt32 sceShaccCgGetArraySize(
 	@ingroup shacccg
 */
 SceShaccCgParameter sceShaccCgGetArrayParameter(
-	SceShaccCgParameter aparam, 
+	SceShaccCgParameter aparam,
 	uint32_t index);
 
 /**	@brief	Returns the vector width for a vector parameter.
@@ -403,7 +403,7 @@ SceShaccCgParameter sceShaccCgGetArrayParameter(
 
 	@ingroup shacccg
 */
-SceUInt32 sceShaccCgGetParameterVectorWidth(
+uint32_t sceShaccCgGetParameterVectorWidth(
 	SceShaccCgParameter param);
 
 /**	@brief	Returns the number of columns for a matrix parameter.
@@ -418,7 +418,7 @@ SceUInt32 sceShaccCgGetParameterVectorWidth(
 
 	@ingroup shacccg
 */
-SceUInt32 sceShaccCgGetParameterColumns(
+uint32_t sceShaccCgGetParameterColumns(
 	SceShaccCgParameter param);
 
 /**	@brief	Returns the number of rows for a matrix parameter.
@@ -433,7 +433,7 @@ SceUInt32 sceShaccCgGetParameterColumns(
 
 	@ingroup shacccg
 */
-SceUInt32 sceShaccCgGetParameterRows(
+uint32_t sceShaccCgGetParameterRows(
 	SceShaccCgParameter param);
 
 /**	@brief	Returns the memory layout for a matrix parameter.
@@ -467,7 +467,7 @@ SceShaccCgParameterMemoryLayout sceShaccCgGetParameterMemoryLayout(
 	@ingroup shacccg
 */
 SceShaccCgParameter sceShaccCgGetRowParameter(
-	SceShaccCgParameter param, 
+	SceShaccCgParameter param,
 	uint32_t index);
 
 /**	@brief	Returns the query format component count for a sampler parameter.
@@ -482,7 +482,7 @@ SceShaccCgParameter sceShaccCgGetRowParameter(
 
 	@ingroup shacccg
 */
-SceUInt32 sceShaccCgGetSamplerQueryFormatWidth(
+uint32_t sceShaccCgGetSamplerQueryFormatWidth(
 	SceShaccCgParameter param);
 
 /**	@brief	Returns the number of different precisions used to as query format for sampler parameter.
@@ -497,7 +497,7 @@ SceUInt32 sceShaccCgGetSamplerQueryFormatWidth(
 
 	@ingroup shacccg
 */
-SceUInt32 sceShaccCgGetSamplerQueryFormatPrecisionCount(
+uint32_t sceShaccCgGetSamplerQueryFormatPrecisionCount(
 	SceShaccCgParameter param);
 
 /**	@brief	Returns query precision format for a sampler parameter.
@@ -517,7 +517,7 @@ SceUInt32 sceShaccCgGetSamplerQueryFormatPrecisionCount(
 */
 SceShaccCgParameterBaseType sceShaccCgGetSamplerQueryFormatPrecision(
 	SceShaccCgParameter param,
-	SceUInt32 index);
+	uint32_t index);
 
 
 #ifdef	__cplusplus
