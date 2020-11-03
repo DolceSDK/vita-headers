@@ -22,10 +22,15 @@ FUNC_RULE_PATTERN = (
 )
 FUNCTION_RULE = re.compile(FUNC_RULE_PATTERN)
 IGNORE_FILES = [
-    'dolcesdk.h',
-    'dolcesdkkern.h',
     'dolcesdk/align.h',
     'dolcesdk/utils.h',
+    'psp2/scream_top.h',
+    'psp2/scream/sce_scream.h',
+    'psp2/scream/sce_scream_ngs.h',
+    'psp2/scream/sce_snd_data.h',
+    'psp2/scream/sce_sndstream.h',
+    'psp2/scream/sce_sndstream_io.h',
+    'psp2/scream/scream_error.h',
 ]
 
 # older python's glob not support `**`
