@@ -16,33 +16,47 @@ extern "C" {
 /**
  * Errors
  */
-#define SCE_NOTIFICATION_UTIL_ERROR_INTERNAL               ((int)0x80106301)
+#define SCE_NOTIFICATION_UTIL_ERROR_INTERNAL               (-2146409727) /* 0x80106301 */
 
 /**
- * BGDL-type notification event handler function
+ * Constants
  */
-typedef void (*SceNotificationUtilProgressEventHandler)(SceUInt32 eventId);
+#define SCE_NOTIFICATION_UTIL_TEXT_MAX                     (0x3F)
+
+/**
+ * Callback for when a BGDL-type notification is cancelled through the notification tray
+ */
+typedef void (*SceNotificationUtilCancelCallback)(void *userData);
+
+/**
+ * Structs
+ */
+typedef struct SceNotificationUtilSendParam {
+	SceWChar16 text[SCE_NOTIFICATION_UTIL_TEXT_MAX+1];       // must be null-terminated
+	char unk_80[0x3E8];
+	SceInt32 unk_468;                                        // must be set to 0
+	SceInt32 unk_46C;                                        // must be set to 0
+} SceNotificationUtilSendParam;
 
 typedef struct SceNotificationUtilProgressInitParam {
-	SceWChar16 notificationText[0x40];                       // must be null-terminated
-	SceWChar16 notificationSubText[0x40];                    // must be null-terminated
-	SceChar8 unk[0x3E6];
-	SceNotificationUtilProgressEventHandler eventHandler;
-	SceInt32 unk_4EC;                                        // can be set to 0
-	SceWChar16 cancelDialogText[0x40];                       // must be null-terminated
+	SceWChar16 text[SCE_NOTIFICATION_UTIL_TEXT_MAX+1];       // must be null-terminated
+	SceWChar16 subText[SCE_NOTIFICATION_UTIL_TEXT_MAX+1];    // must be null-terminated
+	char unk_100[0x3E8];
+	SceNotificationUtilCancelCallback cancelCallback;
+	void *userData;                                          // optional data for the callback
+	SceWChar16 cancelText[SCE_NOTIFICATION_UTIL_TEXT_MAX+1]; // must be null-terminated
 } SceNotificationUtilProgressInitParam;
 
 typedef struct SceNotificationUtilProgressUpdateParam {
-	SceWChar16 notificationText[0x40];                       // must be null-terminated
-	SceWChar16 notificationSubText[0x40];                    // must be null-terminated
-	SceFloat targetProgress;
-	SceChar8 reserved[0x38];
+	SceWChar16 text[SCE_NOTIFICATION_UTIL_TEXT_MAX+1];       // must be null-terminated
+	SceWChar16 subText[SCE_NOTIFICATION_UTIL_TEXT_MAX+1];    // must be null-terminated
+	SceFloat progress;                                       // from 0.0 to 100.0
 } SceNotificationUtilProgressUpdateParam;
 
 typedef struct SceNotificationUtilProgressFinishParam {
-	SceWChar16 notificationText[0x40];                       // must be null-terminated
-	SceWChar16 notificationSubText[0x40];                    // must be null-terminated
-	SceChar8 path[0x3E8];
+	SceWChar16 text[SCE_NOTIFICATION_UTIL_TEXT_MAX+1];       // must be null-terminated
+	SceWChar16 subText[SCE_NOTIFICATION_UTIL_TEXT_MAX+1];    // must be null-terminated
+	char unk_100[0x3E8];
 } SceNotificationUtilProgressFinishParam;
 
 /**
@@ -54,10 +68,8 @@ SceInt32 sceNotificationUtilBgAppInitialize(void);
 
 /**
  * Send notification.
- *
- * Text buffer size must be 0x470.
  */
-SceInt32 sceNotificationUtilSendNotification(const SceWChar16* text);
+SceInt32 sceNotificationUtilSendNotification(const SceNotificationUtilSendParam* sendParam);
 
 /**
  * Clean notifications for calling app from notification history.
@@ -67,17 +79,17 @@ SceInt32 sceNotificationUtilCleanHistory(void);
 /**
  * Start BGDL-type notification.
  */
-SceInt32 sceNotificationUtilProgressBegin(SceNotificationUtilProgressInitParam* initParam);
+SceInt32 sceNotificationUtilProgressBegin(const SceNotificationUtilProgressInitParam* initParam);
 
 /**
  * Update BGDL-type notification.
  */
-SceInt32 sceNotificationUtilProgressUpdate(SceNotificationUtilProgressUpdateParam* updateParam);
+SceInt32 sceNotificationUtilProgressUpdate(const SceNotificationUtilProgressUpdateParam* updateParam);
 
 /**
  * Finish BGDL-type notification.
  */
-SceInt32 sceNotificationUtilProgressFinish(SceNotificationUtilProgressFinishParam* finishParam);
+SceInt32 sceNotificationUtilProgressFinish(const SceNotificationUtilProgressFinishParam* finishParam);
 
 #ifdef __cplusplus
 }
