@@ -23,11 +23,11 @@ namespace Ini {
 
 class MemAllocator {
 public:
-	typedef void* Allocator(size_t size);
-	typedef void Deallocator(void* ptr);
+	typedef void* (*Allocator)(size_t size);
+	typedef void (*Deallocator)(void* ptr);
 
-	Allocator* allocate;
-	Deallocator* deallocate;
+	Allocator allocate;
+	Deallocator deallocate;
 };
 
 class InitParameter {
