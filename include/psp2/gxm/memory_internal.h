@@ -12,6 +12,27 @@
 extern "C" {
 #endif	// def __cplusplus
 
+/** Checks if memory is mapped for GPU usage. If mapped, pointers within the region of
+	memory described by <c><i>base</i></c> and <c><i>size</i></c> may be used with libgxm
+	functions directly.
+
+	@param[in]	base		The base address of the region to check.
+	@param[in]	size		The size in bytes of the region to check.
+	@param[in]	attribs		Bitwise combined attributes from #SceGxmMemoryAttribFlags.
+
+	@retval
+	SCE_OK	The memory region is mapped with <c><i>attribs</i></c>.
+	@retval
+	SCE_GXM_ERROR_UNINITIALIZED The operation failed because the library was not initialized.
+	@retval
+	SCE_GXM_ERROR_DRIVER The operation failed due to a driver error.
+	@retval
+	SCE_GXM_ERROR_INVALID_MAPPING The memory region is not mapped with <c><i>attribs</i></c>.
+
+	@ingroup render
+*/
+SceGxmErrorCode sceGxmCheckMappedMemory(void *base, uint32_t size, uint32_t attribs);
+
 /** Maps memory for vertex USSE code usage.  If successful, this mapping
 	operation returns a USSE offset to address the memory as vertex USSE code.
 
