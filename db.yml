@@ -457,7 +457,10 @@ modules:
         functions:
           sceAudiocodecDecode: 0xE827E04F
           sceAudiocodecInit: 0x1F9A3722
+          sceAudiocodecQueryMaxPcmSize: 0x4ECFEF31
           sceAudiocodecQueryMemSize: 0xE2AF3A54
+          sceAudiocodecQueryPcmSize: 0x2DDF5699
+          sceAudiocodecValidate: 0x3B7D6200
   SceAudioin:
     nid: 0x3DFB6F18
     libraries:
