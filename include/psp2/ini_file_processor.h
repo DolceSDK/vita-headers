@@ -176,9 +176,9 @@ public:
 	/**
 	 * Parse key and corresponding value, one key per call until eof
 	 *
-	 * @param[out] key - buffer to store key string
+	 * @param[out] key - buffer to store key string, must have size at least 0x80
 	 * @param[out] val - buffer to store value string
-	 * @param[in] size - size of output buffers
+	 * @param[in] size - max string size that can fit in val, not including the null terminator
 	 *
 	 * @return 0 on success, < 0 on error.
 	 *
@@ -193,7 +193,7 @@ public:
 	int reset();
 
 private:
-	void *context;
+	void *m_impl;
 };
 
 } // namespace Ini
