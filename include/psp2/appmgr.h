@@ -552,6 +552,22 @@ int sceAppMgrGetBudgetInfo(SceAppMgrBudgetInfo *info);
 int sceAppMgrSendNotificationRequest(SceAppMgrTrcNotification *notification, SceBool blocking);
 
 /**
+ * Grows main memory budget of system mode app.
+ *
+ * @param[in] size - size to grow to
+ * @param[in] unk - set to 1
+ */
+int sceAppMgrGrowMemory(SceSize size, int unk);
+
+/**
+ * Grows main memory budget of system mode app.
+ *
+ * @param[in] size - size to grow to
+ * @param[in] unk - set to 1
+ */
+int sceAppMgrGrowMemory3(SceSize size, int unk);
+
+/**
  * Shared Framebuffer
  */
 
