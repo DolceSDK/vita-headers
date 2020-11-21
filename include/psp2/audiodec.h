@@ -54,6 +54,7 @@ extern "C" {
 #define SCE_AUDIODEC_TYPE_MP3  (0x1004U)
 #define SCE_AUDIODEC_TYPE_AAC  (0x1005U)
 #define SCE_AUDIODEC_TYPE_CELP (0x1006U)
+#define SCE_AUDIODEC_TYPE_SILK (0x1007U)
 
 /* Maximum number of total channels */
 #define SCE_AUDIODEC_AT9_MAX_CH_IN_LIBRARY (16)

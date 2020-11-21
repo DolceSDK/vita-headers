@@ -38,6 +38,7 @@ extern "C" {
 
 /* Audio encoder type */
 #define SCE_AUDIOENC_TYPE_CELP (0x2006U)
+#define SCE_AUDIOENC_TYPE_SILK (0x2007U) /* Only use with sceAudioencCreateEncoderResident() */
 
 /* Maximum number of streams */
 #define SCE_AUDIOENC_CELP_MAX_STREAMS (1)
