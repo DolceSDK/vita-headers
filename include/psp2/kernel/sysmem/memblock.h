@@ -116,6 +116,16 @@ typedef struct SceKernelAllocMemBlockOpt0940 {
 #endif
 } SceKernelAllocMemBlockOpt;
 
+typedef struct SceKernelAllocMemBlockOptInternal {
+	SceSize		size;
+	SceUInt32	attr;
+	SceSize		alignment;
+	SceUID		uidBaseBlock;
+	const char	*strBaseBlockName;
+	SceUInt32	flags;					//! Unknown flags 0x10 or 0x30 for ::sceKernelOpenMemBlock
+	SceUInt32	reserved[10];
+} SceKernelAllocMemBlockOptInternal;
+
 /**
  * Enable 'alignment' member
  */
