@@ -542,9 +542,14 @@ int _sceAppMgrGetRawPathOfApp0ByAppIdForShell(int appId, char resolved_path[292]
 int sceAppMgrGetBudgetInfo(SceAppMgrBudgetInfo *info);
 
 /**
- * Set unk to 0.
+ * Send TRC notification. Only visible if TRC notifications are enabled.
+ *
+ * @param[in] notification - pointer to struct containing notification text
+ * @param[in] blocking - Will wait for semaphore if set to true, otherwise will poll semaphore.
+ *
+ * @return 0 on success, < 0 on error.
  */
-int sceAppMgrSendNotificationRequest(SceAppMgrTrcNotification *notification, int unk);
+int sceAppMgrSendNotificationRequest(SceAppMgrTrcNotification *notification, SceBool blocking);
 
 /**
  * Shared Framebuffer
