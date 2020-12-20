@@ -1,5 +1,5 @@
-#ifndef _DOLCESDK_NP_NP_NPID_H_
-#define _DOLCESDK_NP_NP_NPID_H_
+#ifndef _DOLCESDK_PSP2_NP_NP_NPID_H_
+#define _DOLCESDK_PSP2_NP_NP_NPID_H_
 
 #include <psp2/types.h>
 
@@ -21,4 +21,4 @@ typedef struct SceNpId {
 	SceUChar8 reserved[8];
 } SceNpId;
 
-#endif /* _DOLCESDK_NP_NP_NPID_H_ */
+#endif /* _DOLCESDK_PSP2_NP_NP_NPID_H_ */
