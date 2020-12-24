@@ -96,35 +96,4 @@ typedef SceInt32 SceSystemParamLang;
 #define SCE_SYSTEM_PARAM_TIME_FORMAT_24HOUR			(1)		/*J 24時間 */
 															/*E 24-hour clock */
 
-
-/* This is for backward compatibility with Vitasdk */
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-#define SCE_SYSTEM_PARAM_ID_ENTER_BUTTON 2
-#define SCE_SYSTEM_PARAM_ID_USERNAME 3
-#define SCE_SYSTEM_PARAM_ID_DAYLIGHT_SAVINGS 7
-#define SCE_SYSTEM_PARAM_ID_MAX_VALUE 0xFFFFFFFF
-
-#define SCE_SYSTEM_PARAM_LANG_MAX_VALUE 0xFFFFFFFF
-
-typedef enum SceSystemParamEnterButtonAssign {
-	SCE_SYSTEM_PARAM_ENTER_BUTTON_CIRCLE,
-	SCE_SYSTEM_PARAM_ENTER_BUTTON_CROSS,
-	SCE_SYSTEM_PARAM_ENTER_BUTTON_MAX_VALUE = 0xFFFFFFFF
-} SceSystemParamEnterButtonAssign;
-
-#define SCE_SYSTEM_PARAM_USERNAME_MAXSIZE	(17)
-
-typedef enum SceSystemParamTimeFormat {
-	SCE_SYSTEM_PARAM_TIME_FORMAT_12HR,
-	SCE_SYSTEM_PARAM_TIME_FORMAT_24HR
-} SceSystemParamTimeFormat;
-
-#ifdef __cplusplus
-}
-#endif
-
 #endif	/* _DOLCESDK_PSP2_SYSTEM_PARAM_H_ */
