@@ -6,7 +6,7 @@
 #ifndef _DOLCESDK_PSP2_FIOS2_COMMON_H_
 #define _DOLCESDK_PSP2_FIOS2_COMMON_H_
 
-#include <psp2/scebase.h>
+#include <psp2/scebase_common.h>
 
 #ifndef SCE_FIOS_LINKAGE
 #define SCE_FIOS_LINKAGE      _SCE_IMPORT

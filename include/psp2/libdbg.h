@@ -7,7 +7,7 @@
 #define _DOLCESDK_PSP2_LIBDBG_H_
 
 #include <stdbool.h>
-#include <psp2/scebase.h>
+#include <psp2/scebase_common.h>
 #include <psp2/types.h>
 
 #define SCE_DBG_SUBSTR_CONCATENATE(s1,s2) s1##s2

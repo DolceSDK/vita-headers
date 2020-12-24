@@ -5,14 +5,18 @@
 #ifndef _DOLCESDK_PSP2_ULT_COMMON_H_
 #define _DOLCESDK_PSP2_ULT_COMMON_H_
 
-#include <stdint.h>
-#include <psp2/scebase.h>
-
+#ifdef __psp2__
+#include <psp2/sdk_version.h>
 #define _SCE_ULT_VERSION (SCE_PSP2_SDK_VERSION & 0xffff0000)
+#else
+#define _SCE_ULT_VERSION 0x00930000
+#endif
 
 #ifndef SCE_ULT_MAX_NAME_LENGTH
 #define SCE_ULT_MAX_NAME_LENGTH 31
 #endif
+
+#include <psp2/scebase_common.h>
 
 typedef struct _SceUltOptParamHeader {
 	int64_t __reserved__[2];

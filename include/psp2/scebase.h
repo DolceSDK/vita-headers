@@ -1,8 +1,3 @@
-/**
- * \usergroup{SceBase}
- * \usage{psp2/scebase.h}
- */
-
 #ifndef _DOLCESDK_PSP2_SCEBASE_H_
 #define _DOLCESDK_PSP2_SCEBASE_H_
 
