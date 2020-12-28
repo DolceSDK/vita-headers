@@ -7,7 +7,7 @@
 #include <psp2/np/np_common.h>
 #include <psp2/net.h>
 #include <psp2/libnetctl.h>
-#include <psp2/pspnet_adhoc.h>
+#include <psp2/pspnet_adhoc/pspnet_adhocctl.h>
 
 #ifdef __cplusplus
 extern "C" {
