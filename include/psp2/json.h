@@ -1,1082 +1,387 @@
-/**
- * \usergroup{SceLibJson}
- * \usage{psp2/json.h,SceLibJson_stub,SCE_SYSMODULE_JSON}
- *
- * \note Compiling and linking with this library requires you
- * 		 to compile your code with the compiler flag -fno-rtti.
- */
+#ifndef _DOLCESDK_PSP2_JSON_H_
+#define _DOLCESDK_PSP2_JSON_H_
 
-#ifndef _PSP2_JSON_H_
-#define _PSP2_JSON_H_
+#define SCE_JSON_ERROR_PARSE_INVALID_CHAR		(-2137915135) // 0x80920101
+#define SCE_JSON_ERROR_NOMEM					(-2137915134) // 0x80920102
+#define SCE_JSON_ERROR_NOFILE					(-2137915133) // 0x80920103
+#define SCE_JSON_ERROR_NOROOT					(-2137915132) // 0x80920104
+#define SCE_JSON_ERROR_NOBUF					(-2137915131) // 0x80920105
+#define SCE_JSON_ERROR_NOINIT					(-2137915120) // 0x80920110
+#define SCE_JSON_ERROR_MULTIPLEINIT				(-2137915119) // 0x80920111
+#define SCE_JSON_ERROR_INVALID_ARGUMENT			(-2137915118) // 0x80920112
 
 #ifdef __cplusplus
 
-#include <psp2/types.h>
+#include <stdint.h>
+#include <stddef.h>
 
-namespace sce
-{
+namespace sce{
+namespace Json{
 
-namespace Json
+typedef enum ValueType
 {
-
-/**
- * Strongly typed Enumerator of different types of Values.
- */
-typedef enum class ValueType
-{
-	NullValue            = 0, //!< Null value
-	BoolValue            = 1, //!< Boolean value
-	IntValue             = 2, //!< Long integer value
-	UIntValue            = 3, //!< Unsigned long integer value
-	RealValue            = 4, //!< Double precision float value
-	StringValue          = 5, //!< String value
-	ArrayValue           = 6, //!< Array value
-	ObjectValue          = 7  //!< Object value
+	kValueTypeNull = 0,
+	kValueTypeBoolean,
+	kValueTypeInteger,
+	kValueTypeUInteger,
+	kValueTypeReal,
+	kValueTypeString,
+	kValueTypeArray,
+	kValueTypeObject,
 } ValueType;
 
-/**
- * Enumerator of different errors in this library.
- */
-typedef enum SceJsonError
-{
-	/**
-	 * The module has not been initialised.
-	 */
-	SCE_JSON_ERROR_UNLOADED              = (int)0x80920110,
-	/**
-	 * The module has already been initialised.
-	 */
-	SCE_JSON_ERROR_LOADED                = (int)0x80920111,
-	/**
-	 * Internal Memory Allocation failure(returned nullptr).
-	 */
-	SCE_JSON_ERROR_MEM_ALLOC             = (int)0x80920102,
-	/**
-	 * InitParameter.unk_0x8 is 0.
-	 */
-	SCE_JSON_PARSER_ERROR_EMPTY_BUF      = (int)0x80920105,
-	/**
-	 * Parser failed to load file.
-	 */
-	SCE_JSON_PARSER_ERROR_FILE_LOAD      = (int)0x80920103,
-	/**
-	 * Invalid character in the parsed data.
-	 */
-	SCE_JSON_PARSER_ERROR_INVALID_TOKEN  = (int)0x80920101,
-} SceJsonError;
-
-/**
- * Base class for reimplementation of memory allocation.\n
- * This class must be derived from.
- */
 class MemAllocator
 {
 public:
 	MemAllocator();
 	virtual ~MemAllocator();
 
-	/**
-	 * Virtual Function for memory allocation.
-	 *
-	 * @param[in] size - Size of the allocated memory
-	 * @param[in] data - User defined data for the function.
-	 *
-	 * @return  Pointer to the allocated memory
-	 */
-	virtual void* allocateMemory(SceSize size, void* data) = 0;
-	/**
-	 * Virtual Function for memory deallocation.
-	 *
-	 * @param[in] ptr  - Pointer to memory.
-	 * @param[in] data - User defined data for the function.
-	 */
-	virtual void freeMemory(void* ptr, void* data) = 0;
+#ifdef __psp2__
+#pragma diag_push
+#pragma diag_suppress 2261
+#endif
+	virtual void*	allocate(size_t size, void *userData) =0;
+#ifdef __psp2__
+#pragma diag_pop
+#endif
 
-	/**
-	 * The base class definition prints an error to sceClibPrintf.
-	 */
-	virtual void notifyError(int errorCode, SceSize size, void* data);
+	virtual void	deallocate(void *ptr, void *userData) =0;
+	virtual void	notifyError (int32_t error, size_t size, void* userData );
 };
 
-/**
- * Utility Data Structure to pass on initialisation parameters.
- */
 class InitParameter
 {
 public:
-	/**
-	 * Pointer to a MemAllocator object for internal memory allocations.
-	 * Required field.
-	 */
-	MemAllocator* allocator;
-	/**
-	 * User defined data sent to overriden MemAllocator functions.
-	 */
-	void* data;
-	/**
-	 * Unknown, but must be set to more than 0 when
-	 * using Parser::parse(Value&, const char*).
-	 */
-	SceSize unk_0x8;
+	InitParameter()
+		: allocator(0), userData(0), filebuffersize(0) {}
+
+	InitParameter(MemAllocator *al, void *ud, size_t fbsiz)
+		: allocator(al), userData(ud), filebuffersize(fbsiz) {}
+
+	MemAllocator*	allocator;
+	void*			userData;
+	size_t			filebuffersize;
 };
 
-/**
- * Utility class for initialising and terminating the library.
- */
 class Initializer
 {
 public:
 	Initializer();
 	~Initializer();
-
-	/**
-	 * Initialise the library.
-	 *
-	 * @param[in] initParams - Initialisation parameters for the library.
-	 *
-	 * @return  0 on success, <0 on error.
-	 */
-	int initialize(const InitParameter* initParams);
-	/**
-	 * Terminate the library
-	 *
-	 * @return  0 on success, <0 on error.
-	 */
+	int initialize(const InitParameter* initparam);
 	int terminate();
+
+	typedef void (*AllocatorInfoFunction)(int32_t infono, ValueType accesstype, void* context);
+	static	int32_t setAllocatorInfoCallBack(AllocatorInfoFunction func, void* context);
+
+private:
+	bool			initstatus;
 };
 
 class Value;
-/**
- * Class for JSON arrays.
- */
-class Array
-{
-public:
-	/**
-	 * Class for iterating over Array members.
-	 */
-	class iterator
-	{
-	public:
-		iterator();
-		iterator(const iterator& iter);
-		~iterator();
+class Parser;
+class InputStream;
+struct RootParam;
+class ImplAccessor;
 
-		/**
-		 * Advance the iterator by adv
-		 */
-		void advance(SceSize adv);
-
-		/**
-		 * Assignment operator
-		 */
-		iterator& operator=(const iterator& iter);
-		/**
-		 * Advance the iterator by adv
-		 */
-		void operator++(int adv);
-		/**
-		 * Increment the iterator
-		 */
-		void operator++();
-		/**
-		 * Dereference the iterator.
-		 *
-		 * @return  The Value the iterator is pointing to.
-		 */
-		Value& operator*() const;
-		/**
-		 * Compare to another iterator.
-		 *
-		 * @param[in] iter - The iterator to compare to.
-		 *
-		 * @return  True if they are not equivalent.
-		 */
-		bool operator!=(iterator iter) const;
-		/**
-		 * Access the Value being pointed to.
-		 */
-		Value* operator->() const;
-	private:
-		Value* ptr;
-	};
-
-	Array();
-	Array(const Array& arr);
-	~Array();
-
-	/**
-	 * Get an iterator pointing to the start of the Array
-	 *
-	 * @return  The iterator.
-	 */
-	iterator begin() const;
-	/**
-	 * Get an iterator pointing to after the end of the Array
-	 *
-	 * @return  The iterator.
-	 */
-	iterator end() const;
-	/**
-	 * Insert a Value at pos
-	 *
-	 * @param[in] pos - An iterator pointing to the point to insert the Value.
-	 * @param[in] val - The Value to insert.
-	 *
-	 * @return  An iterator pointing to the inserted value.
-	 */
-	iterator insert(const iterator& pos, const Value& val);
-	/**
-	 * Erase the Value at pos
-	 *
-	 * @param[in] pos - The position of the Value to erase.
-	 *
-	 * @return  iterator following the removed Value
-	 */
-	iterator erase(const iterator& pos);
-	/**
-	 * Returns a reference to the last element in the Array
-	 *
-	 * @return  The refence to the value.
-	 */
-	Value& back() const;
-
-	/**
-	 * Will empty the Array, removing all child valus.
-	 */
-	void clear();
-	/**
-	 * Adds val to the end of the Array
-	 */
-	void push_back(const Value& val);
-	/**
-	 * Removes the last child value.
-	 */
-	void pop_back();
-
-	/**
-	 * Get the size of the array
-	 *
-	 * @return  The size of the array.
-	 */
-	SceSize size() const;
-	/**
-	 * Is the array empty.
-	 *
-	 * @return  true if empty, false otherwise.
-	 */
-	bool empty() const;
-
-	/**
-	 * Assignment Operator
-	 */
-	Array& operator=(const Array& arr);
-
-private:
-	void* impl_data; //!< Pointer to internal implementation data
-};
-
-/**
- * Class for JSON strings.
- */
 class String
 {
 public:
 	String();
-	String(const char* s);
-	String(const String& str);
+	String(const char*);
+	String(const String&);
 	~String();
 
-	const static SceSize npos = -1;
-
-	/**
-	 * Append string s to the end
-	 *
-	 * @param[in] s - Pointer to the C string to append.
-	 *
-	 * @return  A reference the new string
-	 */
-	String& append(const char* s);
-	/**
-	 * Append string s to position pos
-	 *
-	 * @param[in] s   - Pointer to the C string to append.
-	 * @param[in] pos - Position in the String to append to.
-	 *
-	 * @return  A reference the new string
-	 */
-	String& append(const char* s, SceSize pos);
-	/**
-	 * Append string str
-	 *
-	 * @param[in] str - String to append.
-	 *
-	 * @return  A reference the new string
-	 */
-	String& append(const String& str);
-
-	/**
-	 * Returns a newly constructed string object with its value
-	 * initialized to a copy of a substring of this object.
-	 *
-	 * @param[in] pos - The starting position of the sub-string.
-	 * @param[in] len - The length of the sub-string.
-	 *
-	 * @return  The sub-string found at pos.
-	 */
-	String substr(SceSize pos = 0, SceSize len = npos) const;
-	/**
-	 * Returns the character found at pos
-	 *
-	 * @param[in] pos - The position of the desired character.
-	 *
-	 * @return  The character found.
-	 */
-	char at(SceSize pos) const;
-
-	/**
-	 * Searches the string for the first instance of a sequence
-	 *
-	 * @param[in] s   - The sequence to search for.
-	 * @param[in] pos - Position to start searching from.
-	 *
-	 * @return  The position of the first instance of the sequence.
-	 * 			Will return String::npos if not found
-	 */
-	SceSize find(const char* s, SceSize pos) const;
-	/**
-	 * Searches the string for the first instance of a sequence
-	 *
-	 * @param[in] s   - The sequence to search for.
-	 * @param[in] pos - Position to start searching from.
-	 * @param[in] n   - Length of the sequence.
-	 *
-	 * @return  The position of the first instance of the sequence.
-	 * 			Will return String::npos if not found
-	 */
-	SceSize find(const char* s, SceSize pos, SceSize n) const;
-	/**
-	 * Searches the string for the first instance of a sequence
-	 *
-	 * @param[in] str - The sequence to search for.
-	 * @param[in] pos - Position to start searching from.
-	 *
-	 * @return  The position of the first instance of the sequence.
-	 * 			Will return String::npos if not found
-	 */
-	SceSize find(const String& str, SceSize pos) const;
-	/**
-	 * Searches the string for the first instance of a sequence
-	 *
-	 * @param[in] c   - The sequence to search for.
-	 * @param[in] pos - Position to start searching from.
-	 *
-	 * @return  The position of the first instance of the sequence.
-	 * 			Will return String::npos if not found
-	 */
-	SceSize find(char c, SceSize pos) const;
-
-	/**
-	 * Searches the string for the last instance of a sequence
-	 *
-	 * @param[in] s   - The sequence to search for.
-	 * @param[in] pos - Position to start searching from.
-	 *
-	 * @return  The position of the last instance of the sequence.
-	 * 			Will return String::npos if not found
-	 */
-	SceSize rfind(const char* s, SceSize pos) const;
-	/**
-	 * Searches the string for the last instance of a sequence
-	 *
-	 * @param[in] s   - The sequence to search for.
-	 * @param[in] pos - Position to start searching from.
-	 * @param[in] n   - Length of the sequence.
-	 *
-	 * @return  The position of the last instance of the sequence.
-	 * 			Will return String::npos if not found
-	 */
-	SceSize rfind(const char* s, SceSize pos, SceSize n) const;
-	/**
-	 * Searches the string for the last instance of a sequence
-	 *
-	 * @param[in] str - The sequence to search for.
-	 * @param[in] pos - Position to start searching from.
-	 *
-	 * @return  The position of the last instance of the sequence.
-	 * 			Will return String::npos if not found
-	 */
-	SceSize rfind(const String& str, SceSize pos) const;/**
-	 * Searches the string for the last instance of a sequence
-	 *
-	 * @param[in] c   - The sequence to search for.
-	 * @param[in] pos - Position to start searching from.
-	 *
-	 * @return  The position of the last instance of the sequence.
-	 * 			Will return String::npos if not found
-	 */
-	SceSize rfind(char c, SceSize pos) const;
-
-	/**
-	 * Clears the string's contents.
-	 */
-	void clear();
-	/**
-	 * Returns whether the string is empty or not.
-	 *
-	 * @return  true if empty, false if not
-	 */
+	int32_t compare( const String& ) const;
+	int32_t compare( const char* ) const;
+	size_t size() const;
+	size_t length() const;
+	unsigned char at(size_t pos) const;
 	bool empty() const;
-	/**
-	 * Returns the length of the String in bytes.
-	 *
-	 * @return  The string's length.
-	 */
-	SceSize size() const;
-	/**
-	 * Returns the length of the String in bytes.
-	 *
-	 * @return  The string's length.
-	 */
-	SceSize length() const;
-	/**
-	 * Returns a C style string buffer of the String.
-	 *
-	 * @return  The C string
-	 */
 	const char* c_str() const;
-	/**
-	 * Resizes the string to a length of n characters.
-	 */
-	void resize(SceSize n);
 
-	/**
-	 * Compares the string to s.
-	 *
-	 * @return  true if equivalent, false if not
-	 */
-	bool compare(const char* s) const;
-	/**
-	 * Compares the string to str.
-	 *
-	 * @return  true if equivalent, false if not
-	 */
-	bool compare(const String& str) const;
+	String& append( const String& );
+	String& append( const char* );
+	String& append( const char*, size_t );
 
-	/**
-	 * Appends s to the string.
-	 *
-	 * @return  A reference to the resulting String.
-	 */
-	String& operator+=(const char* s);
-	/**
-	 * Appends c to the string.
-	 *
-	 * @return  A reference to the resulting String.
-	 */
-	String& operator+=(unsigned char c);
-	/**
-	 * Compares the string to s.
-	 *
-	 * @return  true if equivalent, false if not
-	 */
-	bool operator==(const char* s) const;
-	/**
-	 * Compares the string to str.
-	 *
-	 * @return  true if equivalent, false if not
-	 */
-	bool operator==(const String& str) const;
+	void clear();
 
-	/**
-	 * Assignment Operator
-	 */
-	String& operator=(const String& str);
+	size_t find (const String& str, size_t pos = 0) const;
+	size_t find (const char* s, size_t pos = 0) const;
+	size_t find (const char* s, size_t pos, size_t n) const;
+	size_t find (char c, size_t pos = 0) const;
+	size_t rfind (const String& str, size_t pos = npos) const;
+	size_t rfind (const char* s, size_t pos = npos) const;
+	size_t rfind (const char* s, size_t pos, size_t n) const;
+	size_t rfind (char c, size_t pos = npos) const;
+	void resize (size_t n);
+	String substr (size_t pos = 0, size_t len = npos) const;
 
+	bool operator==(const String&) const;
+	bool operator==(const char*) const;
+
+	String& operator=(const String&);
+	String& operator+=(const char*);
+	String& operator+=(unsigned char);
+
+	static const size_t npos;
+
+friend class ImplAccessor;
 private:
-	void* impl_data; //!< Pointer to internal implementation data
+	void* m_impl;
+};
+
+class Array
+{
+
+public:
+	class iterator{
+	public:
+		iterator();
+		iterator(const iterator&);
+		~iterator();
+
+		bool operator!= (iterator) const;
+		Value* operator-> () const;
+		Value& operator* () const;
+
+		iterator& operator ++ ();
+		iterator& operator ++ (int);
+
+		void advance(size_t off);
+
+		iterator& operator = (const iterator&);
+
+	friend class ImplAccessor;
+	private:
+		void* m_itimpl;
+	};
+
+	typedef iterator const_iterator;
+
+public:
+	Array();
+	Array(const Array&);
+	~Array();
+
+	iterator begin() const;
+	iterator end() const ;
+	iterator insert(const iterator&, const Value&);
+	iterator erase(const iterator&);
+	Value& back() const;
+
+	void clear();
+	size_t size() const ;
+	void push_back( const Value &val );
+	void pop_back();
+	bool empty() const;
+
+
+
+	Array& operator=(const Array&);
+
+friend class ImplAccessor;
+private:
+	void* m_impl;
+
+
 };
 
 class Object;
-/**
- * Class for value of JSON property.
- */
 class Value
 {
-public:
-	/**
-	 * Callback for serialization.
-	 * It is called at certain points in the serialization process.
-	 *
-	 * @param[in,out] String& - The current state of the parser output.
-	 * @param[in]     void*   - User defined data for the function.
-	 */
-	typedef int (*SerializeCallback)(String&, void*);
-	/**
-	 * Callback for NullValue access.
-	 * It is called when the type of the Value is
-	 * ValueType::NullValue and the Value is accessed.
-	 *
-	 * @param[in] ValueType - The type.
-	 * @param[in] Value*    - A pointer to the parent of the Value accessed.
-	 * @param[in] void*     - User defined data for the function.
-	 *
-	 * @return  A valid Value of the type given.
-	 */
-	typedef Value const&(*NullAccessCallback)(ValueType, const Value*, void*);
-
-	Value();
-	Value(ValueType type);
-	Value(SceBool value);
-	Value(SceInt64 value);
-	Value(SceUInt64 value);
-	Value(double value);
-	Value(const String& value);
-	Value(const Array& value);
-	Value(const Object& value);
-	Value(const Value& value);
-	~Value();
-
-	/**
-	 * Sets s to be a string representation of the value
-	 *
-	 * @param[out] s - The resultant string
-	 */
-	void toString(String& s) const;
-
-	/**
-	 * Swaps the value with another Value.
-	 *
-	 * @param[in] val - The Value to swap with.
-	 */
-	void swap(Value& val);
-	/**
-	 * Clears the value by setting to null.
-	 */
-	void clear();
-
-	/**
-	 * Returns number of children
-	 *
-	 * @return  Number of children
-	 */
-	SceSize count() const;
-
-	/**
-	 * Returns the ValueType of the value
-	 *
-	 * @return  The value's type
-	 */
-	ValueType getType() const;
-
-	/**
-	 * Set the type
-	 *
-	 * @param[in] type - The type to set the value to.
-	 */
-	void set(ValueType type);
-	/**
-	 * Set the value to a boolean
-	 *
-	 * @param[in] value - New value
-	 */
-	void set(SceBool value);
-	/**
-	 * Set the value to a long integer(64 bits)
-	 *
-	 * @param[in] value - New value
-	 */
-	void set(SceInt64 value);
-	/**
-	 * Set the value to an unsigned long integer(64 bits)
-	 *
-	 * @param[in] value - new value
-	 */
-	void set(SceUInt64 value);
-	/**
-	 * Set the value to a double precision float
-	 *
-	 * @param[in] value - New value
-	 */
-	void set(double value);
-	/**
-	 * Set the value to a String
-	 *
-	 * @param[in] value - String to copy from.
-	 */
-	void set(const String& value);
-	/**
-	 * Set the value to an Array
-	 *
-	 * @param[in] value - Array to copy from.
-	 */
-	void set(const Array& value);
-	/**
-	 * Set the value to an Object
-	 *
-	 * @param[in] value - Object to copy from.
-	 */
-	void set(const Object& value);
-	/**
-	 * Set the value
-	 *
-	 * @param[in] value - Value to copy from.
-	 */
-	void set(const Value& value);
-
-	/**
-	 * Set the Value's NullAccessCallback
-	 *
-	 * @param[in] cb   - The callback.
-	 * @param[in] data - Data to pass to the callback function.
-	 *
-	 * @return  0 on success, <0 on error
-	 */
-	int setNullAccessCallback(NullAccessCallback cb, void* data);
-
-	/**
-	 * Returns a reference to the root Value
-	 *
-	 * @return  The root value.
-	 */
-	Value& getRoot() const;
-
-	/**
-	 * Returns a constant reference to the value.
-	 *
-	 * @return  The value. Will return false if the Value is not of type
-	 * 			ValueType::BoolValue.
-	 */
-	const SceBool& getBoolean() const;
-	/**
-	 * Returns a constant reference to the value.
-	 *
-	 * @return  The value. Will return 0 if the Value is not of type
-	 * 			ValueType::IntValue or ValueType::UIntValue.
-	 */
-	const SceInt64& getInteger() const;
-	/**
-	 * Returns a constant reference to the value.
-	 *
-	 * @return  The value. Will return 0 if the Value is not of type
-	 * 			ValueType::IntValue or ValueType::UIntValue.
-	 */
-	const SceUInt64& getUInteger() const;
-	/**
-	 * Returns a constant reference to the value.
-	 *
-	 * @return  The value. Will return 0 if the Value is not of type
-	 * 			ValueType::RealValue.
-	 */
-	const SceDouble& getReal() const;
-	/**
-	 * Returns a constant reference to the string. Only constant functions
-	 * can be used, and the string cannot be altered.\n
-	 * referString() is the alternative function for altering the string.
-	 *
-	 * @return  The string. Will return a garbage string if the Value is
-	 * 			not of type ValueType::StringValue.
-	 */
-	const String& getString() const;
-	/**
-	 * Returns a constant reference to the array. Only constant functions
-	 * can be used, and the array and its members cannot be altered.\n
-	 * referArray() is the alternative function for altering the array.
-	 *
-	 * @return  The array. Will return an empty array if the Value is
-	 * 			not of type ValueType::ArrayValue.
-	 */
-	const Array& getArray() const;
-	/**
-	 * Returns a constant reference to the object. Only constant functions
-	 * can be used, and the object and its members cannot be altered.\n
-	 * referObject() is the alternative function for altering the array.
-	 *
-	 * @return  The object. Will return an empty object if the Value is
-	 * 			not of type ValueType::ObjectValue.
-	 */
-	const Object& getObject() const;
-
-	/**
-	 * Returns a constant reference to the value. Only constant functions
-	 * can be used, and the value cannot be altered.\n
-	 * referValue(SceSize) is the alternative function for altering the value.
-	 *
-	 * @param[in] pos - The position of the value.
-	 *
-	 * @return  The value. Will return an empty value if the it doesn't exist.
-	 */
-	const Value& getValue(SceSize pos) const;
-	/**
-	 * Returns a constant reference to the value. Only constant functions
-	 * can be used, and the value cannot be altered.\n
-	 * referValue(const String&) is the alternative function
-	 * for altering the value.
-	 *
-	 * @param[in] key - The key of the value.
-	 *
-	 * @return  The value. Will return an empty value if the it doesn't exist.
-	 */
-	const Value& getValue(const String& key) const;
-
-	/**
-	 * Returns a pointer to the value.
-	 *
-	 * @return  The value. Will return nullptr if the Value is not of type
-	 * 			ValueType::BoolValue.
-	 */
-	SceBool* referBoolean();
-	/**
-	 * Returns a pointer to the value.
-	 *
-	 * @return  The value. Will return nullptr if the Value is not of type
-	 * 			ValueType::IntValue or ValueType::UIntValue.
-	 */
-	SceInt64* referInteger();
-	/**
-	 * Returns a pointer to the value.
-	 *
-	 * @return  The value. Will return nullptr if the Value is not of type
-	 * 			ValueType::IntValue or ValueType::UIntValue.
-	 */
-	SceUInt64* referUInteger();
-	/**
-	 * Returns a pointer to the value.
-	 *
-	 * @return  The value. Will return 0 if the Value is not of type
-	 * 			ValueType::RealValue.
-	 */
-	SceDouble* referReal();
-	/**
-	 * Returns a pointer to the string.\n
-	 * getString() is the alternative function for only reading the string.
-	 *
-	 * @return  The string. Will return a garbage string if the Value is
-	 * 			not of type ValueType::StringValue.
-	 */
-	String* referString();
-	/**
-	 * Returns a pointer to the array.\n
-	 * getArray() is the alternative function for only reading the array.
-	 *
-	 * @return  The array. Will return an empty array if the Value is
-	 * 			not of type ValueType::ArrayValue.
-	 */
-	Array* referArray();
-	/**
-	 * Returns a pointer to the object.\n
-	 * getObject() is the alternative function for only reading the object.
-	 *
-	 * @return  The object. Will return an empty object if the Value is
-	 * 			not of type ValueType::ObjectValue.
-	 */
-	Object* referObject();
-
-	/**
-	 * Returns a pointer to the value.\n
-	 * getValue(SceSize) is the alternative function for only reading the Value.
-	 *
-	 * @param[in] pos - The position of the value.
-	 *
-	 * @return  The value. Will return an empty value if the it doesn't exist.
-	 */
-	Value* referValue(SceSize pos);
-	/**
-	 * Returns a pointer to the value.\n
-	 * getValue(String&) is the alternative function for only reading the Value.
-	 *
-	 * @param[in] key - The key of the value.
-	 *
-	 * @return  The value. Will return an empty value if the it doesn't exist.
-	 */
-	Value* referValue(const String& key);
-
-	/**
-	 * Serializes the data into a string in json format
-	 *
-	 * @param[out] s - The resulting string, can be written to a file or parsed.
-	 *
-	 * @return  0 on success, <0 on error.
-	 */
-	int serialize(String& s);
-	/**
-	 * Serializes the values into a string in json format.
-	 * Allows for a callback for the different stages in the serialization.
-	 *
-	 * @param[out] s    - The resulting string, can be written to a file or parsed.
-	 * @param[in]  cb   - Callback for the internal serialization. Can be used to format
-	 * 					  the output string, as the string is not formatted internally.
-	 * @param[in]  data - User defined data passed to the SerializeCallback
-	 *
-	 * @return  0 on success, <0 on error.
-	 */
-	int serialize(String& param1, SerializeCallback cb, void* data);
-
-	/**
-	 * Returns constant reference of the Value of key.
-	 *
-	 * @return  The Value.
-	 */
-	const Value& operator[](const String& key) const;
-	/**
-	 * Returns constant reference of the Value of key.
-	 *
-	 * @return  The Value.
-	 */
-	const Value& operator[](const char* key) const;
-	/**
-	 * Returns constant reference of the Value at pos.
-	 *
-	 * @return  The Value.
-	 */
-	const Value& operator[](SceSize pos) const;
-
-	/**
-	 * Assignment Operator
-	 */
-	Value& operator=(const Value& value);
-
-	operator bool() const;
+	friend class Parser;
 
 private:
-	Value* parent;         //!< Pointer to the value's parent.
-	NullAccessCallback cb; //!< The value's NullAccessCallback
-	union
-	{
-	SceBool boolean;
-	SceInt64 integer;
-	SceUInt64 uinteger;
-	SceDouble real;
-	String* string;
-	Array* array;
-	Object* object;
+	Value*			m_parent;
+	RootParam*		m_rootparam;
+	union {
+		bool		m_boolean;
+		int64_t		m_integer;
+		uint64_t	m_uinteger;
+		double		m_real;
+		String*		m_string;
+		Array*		m_array;
+		Object*		m_object;
 	};
-	char unk_0x10[0x4];   //!< Unknown.
-	ValueType type;       //!< The type of the value.
+	char _padding[4];
+	ValueType		m_type;
+public:
+	~Value();
+	Value();
+	Value(ValueType type);
+	Value(bool b);
+	Value(int64_t l);
+	Value(uint64_t ul);
+	Value(double n);
+	Value(const String& s);
+	Value(const Array& a);
+	Value(const Object& o);
+	Value(const Value& x);
+
+	Value& operator=(const Value& x);
+	operator bool() const;
+
+	String toString() const
+	{
+		String str;
+		toString(str);
+		return str;
+	}
+	void toString(String& dst) const;
+
+	typedef const Value& (*NullAccessFunction)(ValueType accesstype, const Value* parent, void* context);
+	typedef int32_t (*DataReceiveFunction)(String& buf, void* userdata);
+	int32_t serialize(String& buf, DataReceiveFunction func, void *userdata);
+	int32_t serialize(String& dst);
+
+	void swap(Value& rhs);
+	void clear();
+
+	void set(ValueType type);
+	void set(bool b);
+	void set(int64_t l);
+	void set(uint64_t ul);
+	void set(double n);
+	void set(const String& s);
+	void set(const Array& a);
+	void set(const Object& o);
+	void set(const Value& x);
+
+	static const String* s_nullstring;
+	static const Array* s_nullarray;
+	static const Object* s_nullobject;
+	static const int64_t s_nullinteger;
+	static const uint64_t s_nulluinteger;
+	static const double s_nullreal;
+	static const bool s_nullbool;
+
+	ValueType		getType() const;
+
+	String*			referString();
+	Array*			referArray();
+	Object*			referObject();
+	int64_t*		referInteger();
+	uint64_t*		referUInteger();
+	double*			referReal();
+	bool*			referBoolean();
+
+	Value*			referValue(size_t index);
+	Value*			referValue(const String& key);
+
+	const String&	getString() const;
+	const Array&	getArray() const;
+	const Object&	getObject() const;
+	const int64_t&	getInteger() const;
+	const uint64_t&	getUInteger() const;
+	const double&	getReal() const;
+	const bool&		getBoolean() const;
+
+	const Value&	getValue(size_t index) const;
+	const Value&	getValue(const String& key) const;
+	const Value&	operator[](size_t index) const;
+	const Value&	operator[](const String& key) const;
+	const Value&	operator[](const char *key) const;
+
+	int32_t	count() const;
+
+	int32_t setNullAccessCallBack(NullAccessFunction func, void* context);
+
+private:
+	void setParent(const Value* parent);
+	const Value* getRoot() const;
+	int32_t serialize_internal(String& buf, DataReceiveFunction func, void *userdata, Value* parent=NULL);
 };
 
-/**
- * Class for JSON objects.
- */
+
 class Object
 {
 public:
-	/**
-	 * Key-Value Pair of JSON Object property.
-	 */
-	class Pair
-	{
+	class Pair{
 	public:
 		Pair();
-		Pair(const String& name, const Value& value);
+		Pair(const String& srcstr, const Value& srcval);
 		~Pair();
 
-		String key;   //!< Name assigned to the property
-		char unk[4];  //!< Unknown
-		Value value;  //!< Value assigned to the property
+	public:
+		String	first;
+		char _padding[4];
+		Value	second;
 	};
-	/**
-	 * Class for iterating over Object members.
-	 */
-	class iterator
-	{
+
+	class iterator{
 	public:
 		iterator();
-		iterator(const iterator& iter);
+		iterator(const iterator&);
 		~iterator();
 
-		/**
-		 * Advance the iterator
-		 *
-		 * @param[in] adv - Number by which to advance.
-		 */
-		void advance(SceSize adv);
+		bool operator == (iterator) const;
+		bool operator != (iterator) const;
 
-		/**
-		 * Increment the iterator
-		 *
-		 * @param[in] adv - The amount to increment it by.
-		 */
-		iterator& operator++(int adv);
-		/**
-		 * Increment the iterator
-		 */
-		iterator& operator++();
-		/**
-		 * Dereference the iterator
-		 *
-		 * @return  A reference to the pair the iterator is
-		 * 			currently pointing to.
-		 */
-		Pair& operator*() const;
-		/**
-		 * Compare to another iterator.
-		 *
-		 * @return  true if equivalent, false otherwise.
-		 */
-		bool operator==(iterator iter) const;
-		/**
-		 * Compare to another iterator.
-		 *
-		 * @return  true if not equivalent, false otherwise.
-		 */
-		bool operator!=(iterator iter) const;
-		/**
-		 * Access the Pair the iterator is pointing to.
-		 */
-		Pair* operator->() const;
+		iterator& operator ++ ();
+		iterator& operator ++ (int);
 
-		/**
-		 * Assignment Operator
-		 */
-		iterator& operator=(const iterator& iter);
+		Pair* operator -> () const;
+		Pair& operator * () const;
 
+		iterator& operator = (const iterator&);
+
+		void advance(size_t off);
+
+	friend class ImplAccessor;
 	private:
-		Pair* ptr;
+		void* m_itimpl;
 	};
 
+	typedef iterator const_iterator;
+
+public:
 	Object();
-	Object(const Object& obj);
+	Object(const Object&);
+
 	~Object();
 
-	/**
-	 * Returns an iterator to the first child element
-	 *
-	 * @return  The iterator.
-	 */
-	iterator begin() const;
-	/**
-	 * Returns an iterator to after the last child element.
-	 *
-	 * @return  The iterator.
-	 */
-	iterator end() const;
-	/**
-	 * Inserts a pair into the Object.
-	 *
-	 * @param[in] p - The Pair to insert.
-	 *
-	 * @return  An iterator pointing to the inserted Pair.
-	 */
-	iterator insert(const Pair& p);
-	/**
-	 * Finds a Pair with a matching key
-	 *
-	 * @param[in] key - The key to search for.
-	 *
-	 * @return  An iterator pointing to the Pair with the matching key.
-	 */
-	iterator find(const String& key);
-	/**
-	 * Empty the object.
-	 */
-	void clear();
-	/**
-	 * Remove the Pair with the key str.
-	 *
-	 * @param[in] str - key of the Pair to remove.
-	 */
-	void erase(const String& str);
+	size_t size() const;
 
-	/**
-	 * Gets the number of child Pairs.
-	 */
-	SceSize size() const;
-	/**
-	 * Is the object empty?
-	 *
-	 * @return  True if there are no child Pairs.
-	 */
+	iterator begin() const ;
+	iterator end() const ;
+	iterator find(const String& key) const ;
+	iterator insert(const Pair& objpair);
+	void erase(const String& key);
+	void clear();
 	bool empty() const;
 
-	/**
-	 * Searches for a pair with a key matching str.
-	 *
-	 * @return  The corresponding value of the matching key.
-	 */
-	Value& operator[](const String& str);
+	Value& operator[] (const String& key);
+	Object& operator=(const Object&);
 
-	/**
-	 * Assignment Operator
-	 */
-	Object& operator=(const Object& obj);
-
+friend class ImplAccessor;
 private:
-	void* impl_data; //!< Pointer to internal implementation data
+	void* m_impl;
 };
 
-/**
- * Static Class for parsing.
- */
 class Parser
 {
 public:
-	/**
-	 * Callback for outputing a character to parse.
-	 * @par Example:
-	 * @code
-	 *  struct Data
-	 *  {
-	 *      char *buf; // Character buffer storing the json data.
-	 *  };
-	 *
-	 *  int Parse_Callback(char& ch, void* data)
-	 *  {
-	 *      Data *dat = (Data *)data;
-	 *      int uVar1;
-	 *
-	 *      ch = *dat->buf;
-	 *      ret = sce::Json::SCE_JSON_ERROR_PARSE_INVALID_CHAR;
-	 *      if (ch != '\0')
-	 *      {
-	 *          dat->buf = dat->buf + 1;
-	 *          ret = 0;
-	 *      }
-	 *      return ret;
-	 *  }
-	 *  @endcode
-	 *
-	 * @param[out] char& - The character to be sent back to the parser.
-	 * @param[in]  void* - User defined data for the function.
-	 */
-	typedef int (*ParseCallback)(char&, void*);
+	typedef int32_t (*DataProvideFunction)(char& data, void* userdata);
+	static int32_t parse(Value& dst, DataProvideFunction func, void *userdata);
+	static int32_t parse(Value& dst, const char *src, size_t siz_src);
+	static int32_t parse(Value& dst, const char *path);
 
-	/**
-	 * Parses user defined data using characters from a
-	 * user defined callback function.
-	 *
-	 * @param[out] val  - Reference to the value the data is written to.
-	 * @param[in]  cb   - The callback function which gives the
-	 * 					  current character.
-	 * @param[in]  data - Data to pass to the callback function
-	 */
-	static int parse(Value& val, ParseCallback cb, void* data);
+private:
+	static int  parseQuadHex(InputStream& is);
+	static bool parseCodePoint(String& str, InputStream& is);
+	static bool parseString(String& s, InputStream& is);
+	static bool parseArray(Value& v, InputStream& is, Value* parent);
+	static bool parseObject(Value& v, InputStream& is, Value* parent);
+	static bool parseString(Value& v, InputStream& is, Value* parent);
+	static bool parseNumber(Value& v, InputStream& is, Value* parent);
+	static bool parseValue(Value& v, InputStream& is, Value* parent);
 
-	/**
-	 * Parses a string buffer
-	 *
-	 * @param[out] val  - Reference to the Value the data is written to.
-	 * @param[in]  buf  - String buffer to parse
-	 * @param[in]  size - Size of buf
-	 *
-	 * @return  0 on success, <0 on error.
-	 */
-	static int parse(Value& val, const char* buf, SceSize size);
-
-	/**
-	 * Parse a json file
-	 *
-	 * @param[out] val  - Reference to the Value the data is written to.
-	 * @param[in]  path  - Path to the json file.
-	 *
-	 * @return  0 on success, <0 on error.
-	 */
-	static int parse(Value& val, const char* path);
 };
 
-} /* namespace Json */
-} /* namespace sce  */
+} // namespace Json
+} // namespace sce
 
 #endif /* __cplusplus */
 
-#endif /* _PSP2_JSON_H_ */
+#endif // _DOLCESDK_PSP2_JSON_H_
