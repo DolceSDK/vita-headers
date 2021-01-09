@@ -7109,7 +7109,12 @@ modules:
           _ZN4Manx14NetworkProfile3getENS_22NetPropsCookieFilenameEPcj: 0x0BD192F1
           _ZN4Manx14NetworkProfile9getStringENS_21NetPropsSslCipherListE: 0x47FE747E
           _ZN4Manx18getDefaultFontPathEv: 0xCA0C5B79
+          _ZN4Manx21getPlatformFamilyListEPKwj: 0x7089F8FF
           _ZN4Manx6Locale11getLanguageEv: 0x14DF3842
+          _ZN4Manx7RunLoop4initEv: 0xDEAC414E
+          _ZN4Manx8Memblock10deallocateEPvj: 0x5B6231F9
+          _ZN4Manx8Memblock11setWritableEb: 0x51C41E3E
+          _ZN4Manx8Memblock8allocateEjjb: 0x925BD038
           accept: 0x016AA482
           access: 0x440AB974
           bind: 0x504EFE25
@@ -7162,6 +7167,7 @@ modules:
           deflateEnd: 0x9A314270
           deflateInit2_: 0x1E106A0E
           deflateReset: 0x86E00B12
+          dirname: 0x82751D7E
           encodeImage: 0x431BFA32
           freescrachpadpath: 0x11B9D0D0
           ftruncate: 0x0C46FC96
@@ -7182,6 +7188,7 @@ modules:
           jpeg_has_multiple_scans: 0xF2B70C73
           jpeg_input_complete: 0xF0CCC16C
           jpeg_read_header: 0x2B55C020
+          jpeg_read_scanlines: 0x57CC2685
           jpeg_start_decompress: 0xD15514AA
           jpeg_start_output: 0x1A9112C6
           jpeg_std_error: 0xF092A788
@@ -7314,12 +7321,30 @@ modules:
           png_write_tEXt: 0x010BC6F1
           png_write_tRNS: 0xD6D39996
           png_write_zTXt: 0xD435A233
+          pthread_attr_destroy: 0xB92D1275
           pthread_attr_getstack: 0xCCF9B562
           pthread_attr_init: 0x293D1E2E
+          pthread_attr_setname_sce: 0xDEE2F929
+          pthread_cond_broadcast: 0xB99DDCE0
+          pthread_cond_destroy: 0xCED4C61B
+          pthread_cond_init_sce: 0xCE37A53C
+          pthread_cond_signal: 0x54F5F245
+          pthread_cond_timedwait: 0xA7911448
+          pthread_cond_wait: 0x49784A13
           pthread_create: 0x7FA4513E
+          pthread_equal: 0xC74F2F8E
           pthread_exit: 0x046C84C1
           pthread_getattr_np: 0x83B2614D # not implemented
+          pthread_join: 0x70619FAB
           pthread_kill: 0x7FB67444 # not implemented
+          pthread_mutex_destroy: 0x51DD290C
+          pthread_mutex_init: 0x5B55E8F8
+          pthread_mutex_lock: 0x0AD3644A
+          pthread_mutex_trylock: 0x43644E37
+          pthread_mutex_unlock: 0x9BAEB8BC
+          pthread_mutexattr_destroy: 0x01878533
+          pthread_mutexattr_init: 0xC6DA3459
+          pthread_mutexattr_settype: 0xFB68CE8A
           pthread_self: 0x1DB7E7CD
           read: 0x8F67A7FF
           readdir_r: 0x9DB5A146
@@ -7328,6 +7353,7 @@ modules:
           rmdir: 0x7DC5F0A1
           scePsp2CompatPngDecodeFile: 0x879E6779
           scePsp2CompatPngDecodeMemory: 0xF7687326
+          sched_yield: 0xA2D8700D
           scrachpadmatch: 0xE86136A0
           select: 0x7100A598
           send: 0xDF63C36D
@@ -7352,6 +7378,15 @@ modules:
           sqlite3_set_authorizer: 0x1AE1928A
           sqlite3_step: 0x9291C971
           sqlite3_total_changes: 0x0833BFAF
+          stat: 0x9A44F009
+          ucnv_countAliases: 0xB084491D
+          ucnv_getAlias: 0x22868A64
+          ucnv_getCanonicalName: 0x9383419B
+          ucnv_getName: 0x5E7FAB2A
+          ucnv_getStandardName: 0xA031F21C
+          ucnv_open: 0x9F91D56C
+          ucnv_setFallback: 0x3484035A
+          ucnv_toUnicode: 0xFA144522
           unlink: 0x3358CDD4
           write: 0xFB129366
   SceNpManager:
