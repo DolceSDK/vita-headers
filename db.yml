@@ -7951,34 +7951,34 @@ modules:
         nid: 0xD0FC2991
         functions:
           ksceKblAuthMgrClose: 0x79241ACF
-          ksceKblCheckDipsw: 0xC8F4DE71
           ksceKblCpuDisableIrqInterrupts: 0xDDB3A1A8
           ksceKblFreeFileSystemCtx: 0x261F2747
-          ksceKblGetCpuId: 0xB506A10E
           ksceKblGetHardwareFlags: 0xD3A516D5
           ksceKblGetMinimumLogLevel: 0xC011935A
           ksceKblGetPutcharHandler: 0x9B868276
           ksceKblInitDevice: 0xF7AF8690
-          ksceKblIsAllowKernelDebug: 0xCE94F329
-          ksceKblIsCEX: 0x8A416887
-          ksceKblIsCEXJpFat: 0xC3DDDE15
-          ksceKblIsDEX: 0x5945F065
-          ksceKblIsDolce: 0xA7BD4417
-          ksceKblIsGenuineDolce: 0xB6D00D6D
-          ksceKblIsTest: 0x943E7537
-          ksceKblIsTool: 0xB6C9ACF1
-          ksceKblIsVITA: 0x838466E9
           ksceKblLoadModule: 0x6D7A1F18
-          ksceKblPrintf: 0x13A5ABEF
-          ksceKblPrintfLevel: 0x752E7EEC
           ksceKblPutchar: 0x08E9FAEB
           ksceKblSetNonSyncModuleStart: 0x9F4F3F98
           ksceKblStartModule: 0x9A92436E
-          ksceKblSysrootCpuCoreSyncAll: 0x314AA770
-          ksceKblSysrootCpuCoreSyncWait: 0x807B4437
-          ksceKblSysrootIofilemgrStart: 0xC7B77991
-          ksceKblSysrootProcessmgrStart2: 0x161D6FCC
-          ksceKblSysrootThreadMgrStartAfterProcess: 0x1DB28F02
+          ksceKernelCheckDipsw: 0xC8F4DE71
+          ksceKernelCpuId: 0xB506A10E
+          ksceKernelPrintf: 0x13A5ABEF
+          ksceKernelPrintfLevel: 0x752E7EEC
+          ksceKernelSysrootCorelockLock: 0x807B4437
+          ksceKernelSysrootCorelockUnlock: 0x314AA770
+          ksceKernelSysrootIofilemgrStart: 0xC7B77991
+          ksceKernelSysrootProcessmgrStart2: 0x161D6FCC
+          ksceKernelSysrootThreadMgrStartAfterProcess: 0x1DB28F02
+          ksceSblAimgrIsCEX: 0x8A416887
+          ksceSblAimgrIsDEX: 0x5945F065
+          ksceSblAimgrIsDiag: 0xC3DDDE15
+          ksceSblAimgrIsDolce: 0xA7BD4417
+          ksceSblAimgrIsGenuineDolce: 0xB6D00D6D
+          ksceSblAimgrIsTest: 0x943E7537
+          ksceSblAimgrIsTool: 0xB6C9ACF1
+          ksceSblAimgrIsVITA: 0x838466E9
+          ksceSblQafManagerIsAllowKernelDebug: 0xCE94F329
   SceOled:
     nid: 0xE49D6C00
     libraries:
