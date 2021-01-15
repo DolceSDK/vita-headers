@@ -8361,6 +8361,23 @@ modules:
           scePvfSetEmboldenRate: 0x6E787722
           scePvfSetResolution: 0xC4444FB3
           scePvfSetSkewValue: 0x3DD09BC9
+  SceRazorCapture:
+    nid: 0xA0B6A3B5
+    libraries:
+      SceRazorCapture:
+        kernel: false
+        nid: 0x7B2A3F18
+        functions:
+          sceRazorCaptureIsInProgress: 0x911E0AA0
+          sceRazorCaptureSetTrigger: 0xE916B538
+          sceRazorCaptureSetTriggerNextFrame: 0x3D4B7E68
+          sceRazorGpuCaptureEnableSalvage: 0xDFBDCC4C
+          sceRazorGpuCaptureIsInProgress: 0xD2358BFB
+          sceRazorGpuCaptureSetCaptureAllMemory: 0x6A09822D
+          sceRazorGpuCaptureSetCaptureBeforeKick: 0x8EE74EB7
+          sceRazorGpuCaptureSetTrigger: 0x472492DA
+          sceRazorGpuCaptureSetTriggerNextFrame: 0x9DAA7E9C
+          sceRazorGpuCaptureStartSalvageMode: 0x3F0913CF
   SceRegistryMgr:
     nid: 0x761F343C
     libraries:
