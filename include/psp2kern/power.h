@@ -232,16 +232,6 @@ int kscePowerSetArmClockFrequency(int freq);
  * @return 0 on success, < 0 on error
  */
 int kscePowerSetBusClockFrequency(int freq);
-
-/**
- * Sets GPU clock frequency
- *
- * @param freq - Frequency to set in Mhz
- *
- * @return 0 on success, < 0 on error
- */
-int kscePowerSetGpuClockFrequency(int freq);
-
 /**
  * Sets GPU crossbar clock frequency
  *

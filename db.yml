@@ -8364,7 +8364,6 @@ modules:
           kscePowerSetDisplayBrightness: 0x43D5CE1D
           kscePowerSetDisplayMaxBrightness: 0x77027B6B
           kscePowerSetDmac5ClockFrequency: 0xA902CDDF
-          kscePowerSetGpuClockFrequency: 0x717DB06C
           kscePowerSetGpuClockFrequencyInternal: 0x264C24FC
           kscePowerSetGpuClockFrequencyProc: 0xB104EFE2
           kscePowerSetGpuXbarClockFrequency: 0xA7739DBE
