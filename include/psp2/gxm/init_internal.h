@@ -10,6 +10,18 @@
 extern "C" {
 #endif	// def __cplusplus
 
+/** Flags for libgxm initialization.
+
+	@ingroup render
+*/
+typedef enum SceGxmInitializeFlagsInternal
+{
+	SCE_GXM_INITIALIZE_FLAG_PB_USE_USER_MEMORY			=	0x00000001U,	///< Use uncached main memory for the parameter buffer.
+	SCE_GXM_INITIALIZE_FLAG_PBDESCFLAGS_ZLS_OVERRIDE	=	0x00000002U,
+	SCE_GXM_INITIALIZE_FLAG_PBDESCFLAGS_SHARED			=	0x00000004U,	///< The parameter buffer can be shared between rendering contexts.
+	SCE_GXM_INITIALIZE_FLAG_DRIVER_MEM_SHARE			=	0x00000008U		///< Use shared driver memory for the parameter buffer.
+} SceGxmInitializeFlagsInternal;
+
 /** Initializes the libgxm library for shared sync objects.
 
 	Internally this function will prepare this process for rendering, creating

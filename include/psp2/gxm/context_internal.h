@@ -75,6 +75,25 @@ SceGxmErrorCode sceGxmSetFragmentJobVisibilityBuffer(
 	void *bufferBase,
 	uint32_t stridePerCore);
 
+/** Allocates a VDM buffer for Razor GPU Capture.
+
+	@param[in]		context			A pointer to the rendering context.
+	@param[in]		size			The size to allocate.
+	@param[out]		mem				Receives the buffer address.
+
+	@retval
+	SCE_OK The operation was successful.
+	@retval
+	SCE_GXM_ERROR_RESERVE_FAILED The operation failed due to the VDM buffer callback
+	function failing to provide sufficient memory.
+
+	@ingroup render
+*/
+SceGxmErrorCode sceGxmRazorReplayReserveVdm(
+	SceGxmContext *context,
+	uint32_t size,
+	void **mem);
+
 #ifdef	__cplusplus
 }
 #endif	// def __cplusplus

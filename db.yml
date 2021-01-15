@@ -2154,6 +2154,7 @@ modules:
           PVRSRVAcquireDeviceData: 0x70800B46
           PVRSRVAllocDeviceMem: 0x071E62F0
           PVRSRVAllocSyncInfo: 0x94286660
+          PVRSRVAllocUserModeMem: 0x7AF40138
           PVRSRVConnect: 0x228252A2
           PVRSRVCreateDeviceMemContext: 0x1E0A9C4A
           PVRSRVCreateSyncInfoModObj: 0x416C8813
@@ -2162,11 +2163,13 @@ modules:
           PVRSRVEnumerateDevices: 0x4447D217
           PVRSRVFreeDeviceMem: 0xB6CFD213
           PVRSRVFreeSyncInfo: 0xB26DF3D2
+          PVRSRVFreeUserModeMem: 0x1BE5985A
           PVRSRVGetMiscInfo: 0x73E945A1
           PVRSRVMapMemoryToGpu: 0x56893E98
           PVRSRVModifyPendingSyncOps: 0x0D27286F
           PVRSRVReleaseMiscInfo: 0xF4735A47
           PVRSRVUnmapMemoryFromGpu: 0xAD20D1A0
+          SGXAddRenderTarget: 0x0162A405
           SGXCreateRenderContext: 0x8A997DBB
           SGXCreateTransferContext: 0xBDE2B9E1
           SGXDestroyRenderContext: 0x0BFE1685
@@ -2478,11 +2481,17 @@ modules:
         nid: 0xB5973AAA
         functions:
           sceGxmShaderPatcherCreateFragmentProgramInternal: 0x83149CAD
+      SceGxmInternalForReplay:
+        kernel: false
+        nid: 0xA64BEF47
+        functions:
+          sceGxmRazorReplayReserveVdm: 0xEFA222AF
       SceGxmInternalForTest:
         kernel: false
         nid: 0x171129AF
         functions:
           sceGxmAllocDeviceMemLinux: 0xD412F27B
+          sceGxmFreeDeviceMemLinux: 0x2B0A5A39
           sceGxmSetFragmentJobDepthBiasAdjust: 0x46D6C306
           sceGxmSetFragmentJobSplitThreshold: 0xD352F90A
           sceGxmSetFragmentJobVisibilityBuffer: 0x1D68FB73

@@ -12,6 +12,29 @@
 extern "C" {
 #endif	// def __cplusplus
 
+/** The device heap ID when allocating memory using #sceGxmAllocDeviceMemLinux().
+
+	@ingroup render
+*/
+typedef enum SceGxmDeviceHeapId {
+	SCE_GXM_DEVICE_HEAP_ID_USER_NC,
+	SCE_GXM_DEVICE_HEAP_ID_CDRAM,
+	SCE_GXM_DEVICE_HEAP_ID_VERTEX_USSE,
+	SCE_GXM_DEVICE_HEAP_ID_FRAGMENT_USSE
+} SceGxmDeviceHeapId;
+
+/** Memory info for memory allocated and mapped using #sceGxmAllocDeviceMemLinux().
+
+	@ingroup render
+*/
+typedef struct SceGxmDeviceMemInfo {
+	SceUID memBlockId;		///< The UID of the allocated memory block.
+	void *mappedBase;		///< Base address of the allocated memory block.
+	uint32_t offset;		///< USSE offset for vertex and fragment USSE memory.
+	uint32_t size;			///< The size passed to #sceGxmAllocDeviceMemLinux().
+	uint32_t heapId;		///< The device heap ID from #SceGxmDeviceHeapId.
+} SceGxmDeviceMemInfo;
+
 /** Checks if memory is mapped for GPU usage. If mapped, pointers within the region of
 	memory described by <c><i>base</i></c> and <c><i>size</i></c> may be used with libgxm
 	functions directly.
@@ -122,6 +145,42 @@ SceGxmErrorCode sceGxmMapFragmentUsseMemoryInternal(void *base, uint32_t size, u
 	@ingroup render
 */
 SceGxmErrorCode sceGxmUnmapFragmentUsseMemoryInternal(void *base);
+
+/** Allocates and maps memory for GPU usage.  The storage for the memory info is
+	allocated by libgxm.
+
+	@param[in]	heapId		Device memory heap ID from #SceGxmDeviceHeapId.
+	@param[in]	flags		Bitwise combined attributes from #SceGxmMemoryAttribFlags.
+	@param[in]	size		Size in bytes of the memory to allocate.
+	@param[in]	alignment	This parameter is unused. Specify 0 or a power of 2.
+	@param[out]	memInfo		Memory info of the allocated memory.
+
+	@retval
+	SCE_OK	The operation was completed successfully.
+	@retval
+	SCE_GXM_ERROR_OUT_OF_MEMORY There was no memory to perform the operation.
+	@retval
+	SCE_GXM_ERROR_INVALID_VALUE The operation failed because a parameter was invalid.
+	@retval
+	SCE_GXM_ERROR_INVALID_POINTER The operation failed because a pointer was invalid.
+	@retval
+	SCE_GXM_ERROR_INVALID_ALIGNMENT The operation failed due to invalid alignment.
+
+	@ingroup render
+*/
+SceGxmErrorCode sceGxmAllocDeviceMemLinux(uint32_t heapId, uint32_t flags, uint32_t size, uint32_t alignment, SceGxmDeviceMemInfo **memInfo);
+
+/** Unmaps and frees memory allocated with #sceGxmAllocDeviceMemLinux().  The
+	storage for the memory info is freed by libgxm.
+
+	@param[in]	memInfo		Memory info of the allocated memory.
+
+	@retval
+	SCE_OK	The operation was completed successfully.
+
+	@ingroup render
+*/
+SceGxmErrorCode sceGxmFreeDeviceMemLinux(SceGxmDeviceMemInfo* memInfo);
 
 #ifdef	__cplusplus
 }
