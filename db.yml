@@ -3953,6 +3953,8 @@ modules:
         kernel: false
         nid: 0xD46680E4
         functions:
+          _PSSLibcErrnoLoc: 0xA31CBFC1
+          _PSS_Assert: 0xF7AB9D3E
           __aeabi_unwind_cpp_pr0: 0xD172A1F6
           __aeabi_unwind_cpp_pr1: 0x6B008191
           __ashldi3: 0x3FF08624
@@ -3961,8 +3963,8 @@ modules:
           __lshrdi3: 0x69B23762
           __moddi3: 0x9A2906FE
           __modsi3: 0x3F8F26A3
-          __sce_aeabi_idiv1: 0x1EBF97CC
-          __sce_aeabi_ldiv1: 0x2AB3B87C
+          __sce_aeabi_idiv0: 0x1EBF97CC
+          __sce_aeabi_ldiv0: 0x2AB3B87C
           __udivdi3: 0xD7F019CF
           __udivsi3: 0xFF10AAE9
           __umoddi3: 0x66FCF225
@@ -4129,7 +4131,6 @@ modules:
           monoeg_try_realloc: 0xB1006CCC
           pss_alloc_mem: 0x1A2E441F
           pss_alloc_raw: 0x599AEA5E
-          pss_app_exit_liveboard: 0x58ABAD62
           pss_code_mem_alloc: 0xF466ABEC
           pss_code_mem_flush_icache: 0x110F567B
           pss_code_mem_free: 0xB468C313
@@ -4145,12 +4146,13 @@ modules:
           pss_delay_thread: 0x018524DD
           pss_delete_semaphore: 0x6148DE4D
           pss_disable_ftz: 0x2E9C2A4B
-          pss_errno_loc: 0x58ABAD62
           pss_free_mem: 0x1C59A84B
           pss_free_prng_provider: 0xBBCF4B04
           pss_free_raw: 0xB9EFB986
+          pss_free_system_certs: 0xF2F45184
           pss_get_errnoloc: 0x617F673C
           pss_get_prng_provider: 0x88496636
+          pss_get_stack_bottom: 0x5DB23B60
           pss_get_thread_context: 0x6ABAA310
           pss_get_ticks_32: 0xEC94BFCF
           pss_get_ticks_64: 0xBE8FF7BE
@@ -4172,6 +4174,7 @@ modules:
           pss_io_rename: 0xB673FE93
           pss_io_rmdir: 0x1F1764AD
           pss_io_write: 0xAF972DF7
+          pss_load_system_certs: 0xDDDB0D93
           pss_nanosleep: 0x7FFBD866
           pss_net_accept: 0xD3F85D07
           pss_net_bind: 0xD1E93EEF
@@ -4180,6 +4183,7 @@ modules:
           pss_net_epoll_ctl: 0x335C5433
           pss_net_epoll_destroy: 0xCFFBBBF8
           pss_net_epoll_wait: 0x1942AA03
+          pss_net_get_local_ips: 0xB1C79D8C
           pss_net_gethostname: 0xB34921E5
           pss_net_getpeername: 0xB46F9AEC
           pss_net_getsockname: 0x92AB54A3
@@ -4195,14 +4199,17 @@ modules:
           pss_net_resolver_create: 0x8FFCD9A4
           pss_net_resolver_start_aton: 0x5E72FC36
           pss_net_resolver_start_ntoa: 0x51B4211B
+          pss_net_select: 0xA824AF1D
           pss_net_send: 0xDFAF1FB3
           pss_net_sendto: 0x4A101C16
           pss_net_setsockopt: 0xD3FED467
           pss_net_shutdown: 0xDEDBF700
           pss_net_socket: 0xCAB1666C
+          pss_net_socket_available: 0x7DCD029B
           pss_net_socket_close: 0x64DD5EB6
           pss_prng_fill: 0x7EA1D46F
           pss_resume_thread: 0x15C51A57
+          pss_return_to_lb: 0x58ABAD62
           pss_set_thread_context: 0x5E5A5A9C
           pss_set_win32_filetime: 0xF981589B
           pss_signal_semaphore: 0xB9A41171
